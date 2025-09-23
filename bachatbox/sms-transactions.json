@@ -1,0 +1,65 @@
+[
+  {
+    "id": "mfi6aetseccnv",
+    "amount": 101,
+    "type": "expense",
+    "description": "UPI Payment - ₹101",
+    "category": "Digital Payments",
+    "timestamp": "2025-09-13T11:18:19.792Z",
+    "source": "sms"
+  },
+  {
+    "id": "mfi68msa99lum",
+    "amount": 101,
+    "type": "expense",
+    "description": "UPI Payment - ₹101",
+    "category": "Digital Payments",
+    "timestamp": "2025-09-13T11:16:56.794Z",
+    "source": "sms"
+  },
+  {
+    "id": "mfi681c4uw47k",
+    "amount": 101,
+    "type": "expense",
+    "description": "UPI Payment - ₹101 (Demo)",
+    "category": "Digital Payments",
+    "timestamp": "2025-09-13T11:16:28.996Z",
+    "source": "sms"
+  },
+  {
+    "id": "mfi5cg22fzekc",
+    "amount": 101,
+    "type": "expense",
+    "description": "UPI Payment - ₹101 (Demo)",
+    "category": "Digital Payments",
+    "timestamp": "2025-09-13T10:51:55.082Z",
+    "source": "sms"
+  },
+  {
+    "id": "mfi4qt579zl9sx944",
+    "amount": 101,
+    "type": "expense",
+    "description": "UPI Payment - ₹101",
+    "category": "Digital Payments",
+    "timestamp": "2025-09-13T10:35:05.611Z",
+    "source": "sms"
+  },
+  {
+    "id": "mfi4qbdxslfuda2ex",
+    "amount": 101,
+    "type": "expense",
+    "description": "UPI Payment - ₹101",
+    "category": "Digital Payments",
+    "timestamp": "2025-09-13T10:34:42.597Z",
+    "source": "sms"
+  },
+  {
+    "id": "mfi4pqktyrszndfyp",
+    "amount": 101,
+    "type": "expense",
+    "description": "UPI Payment - ₹101",
+    "category": "Digital Payments",
+    "timestamp": "2025-09-13T10:34:15.629Z",
+    "source": "sms"
+  }
+]
