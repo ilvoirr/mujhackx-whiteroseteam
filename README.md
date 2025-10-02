@@ -1,5 +1,7 @@
 # BachatBox - Personal Finance Assistant
 
+[![Watch ACM Hacks 10.0 Submission](https://img.youtube.com/vi/f3N3tP9tnXY/hqdefault.jpg)](https://youtu.be/f3N3tP9tnXY)
+
 BachatBox is a modern personal finance application that helps you track expenses, analyze spending patterns, and get AI-powered financial advice.
 
 ### Key Features
