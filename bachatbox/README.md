@@ -4,7 +4,7 @@ An advanced multi-agent system simulating a seamless, end-to-end loan approval j
 
 <br/>
 
-[![Tata Capital Prototype Demo](https://img.youtube.com/vi/YOUR_YOUTUBE_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_YOUTUBE_VIDEO_ID)
+[![Tata Capital Prototype Demo](https://img.youtube.com/vi/YOUR_YOUTUBE_VIDEO_ID/0.jpg)](https://youtu.be/8SF1ZfzD-lY)
 
 ## Key Deliverables
 
