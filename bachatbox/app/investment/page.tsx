@@ -126,29 +126,23 @@ interface PortfolioStock {
 
 const Logo = () => {
   return (
-    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="text-black w-[10vh] h-[10vh] md:w-[4.9vh] md:h-[4.9vh]"
-      >
-        <path d="M11 17h3v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a3.16 3.16 0 0 0 2-2h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-1a5 5 0 0 0-2-4V3a4 4 0 0 0-3.2 1.6l-.3.4H11a6 6 0 0 0-6 6v1a5 5 0 0 0 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1z"/>
-        <path d="M16 10h.01"/>
-        <path d="M2 8v1a2 2 0 0 0 2 2h1"/>
-      </svg>
+    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-white">
+      <div className="text-white w-[4vh] h-[4vh] md:w-[3vh] md:h-[3vh] flex items-center justify-center shrink-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="w-full h-full"
+        >
+          <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91c4.59-1.15 8-5.86 8-10.91V5l-8-3zM10.91 15.5l-3.41-3.41l1.41-1.41l2 2l4.59-4.59l1.41 1.41l-6 6z" />
+        </svg>
+      </div>
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="text-[1.6vw] font-semibold tracking-tight text-black"
+        className="text-[1.4vw] font-semibold tracking-tight text-white"
       >
-        BachatBox
+        Tata Capital
       </motion.span>
     </div>
   );
@@ -156,23 +150,17 @@ const Logo = () => {
 
 const LogoIcon = () => {
   return (
-    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="text-black w-[5vh] h-[5vh] md:w-[4.9vh] md:h-[4.9vh]"
-      >
-        <path d="M11 17h3v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a3.16 3.16 0 0 0 2-2h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-1a5 5 0 0 0-2-4V3a4 4 0 0 0-3.2 1.6l-.3.4H11a6 6 0 0 0-6 6v1a5 5 0 0 0 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1z"/>
-        <path d="M16 10h.01"/>
-        <path d="M2 8v1a2 2 0 0 0 2 2h1"/>
-      </svg>
+    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-white">
+      <div className="text-white w-[4vh] h-[4vh] md:w-[3vh] md:h-[3vh] flex items-center justify-center shrink-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="w-full h-full"
+        >
+          <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91c4.59-1.15 8-5.86 8-10.91V5l-8-3zM10.91 15.5l-3.41-3.41l1.41-1.41l2 2l4.59-4.59l1.41 1.41l-6 6z" />
+        </svg>
+      </div>
     </div>
   );
 };
@@ -445,7 +433,7 @@ export default function StockMarketPage() {
       label: "Balance Sheet",
       href: "/apppage",
       icon: (
-        <IconReceipt className="h-7 w-7 shrink-0 text-neutral-700" />
+        <IconReceipt className="h-7 w-7 shrink-0 text-white" />
       ),
       onClick: () => router.push('/apppage'),
     },
@@ -453,52 +441,36 @@ export default function StockMarketPage() {
       label: "Visualise Stats",
       href: "/visualise",
       icon: (
-        <IconChartBar className="h-7 w-7 shrink-0 text-neutral-700" />
+        <IconChartBar className="h-7 w-7 shrink-0 text-white" />
       ),
       onClick: () => router.push('/visualise'),
     },
     {
-      label: "AI Dashboard",
+      label: "Tata BFSI Dashboard",
       href: "/advice",
       icon: (
-        <IconTable className="h-7 w-7 shrink-0 text-neutral-700" />
+        <IconTable className="h-7 w-7 shrink-0 text-white" />
       ),
       onClick: () => router.push('/advice'),
     },
     {
-      label: "BudgetBot",
+      label: "Tata Loans Expert",
       href: "/chatbot",
       icon: (
-        <IconMessageCircle className="h-7 w-7 shrink-0 text-neutral-700" />
+        <IconMessageCircle className="h-7 w-7 shrink-0 text-white" />
       ),
       onClick: () => router.push('/chatbot'),
     },
     {
-      label: "What-if Simulator",
-      href: "/simulator",
-      icon: (
-        <IconSparkles className="h-7 w-7 shrink-0 text-neutral-700" />
-      ),
-      onClick: () => router.push('/simulator'),
-    },
-    {
-      label: "SplitWise",
-      href: "/splitwise",
-      icon: (
-        <IconUsers className="h-7 w-7 shrink-0 text-neutral-700" />
-      ),
-      onClick: () => router.push('/splitwise'),
-    },
-    {
       label: "Financial Reads",
       href: "/financial-reads",
-      icon: <IconBook className="h-7 w-7 shrink-0 text-neutral-700" />,
+      icon: <IconBook className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/financial-reads'),
     },
     {
       label: "Stock Market",
       href: "/investment",
-      icon: <IconTrendingUp className="h-7 w-7 shrink-0 text-neutral-700" />,
+      icon: <IconTrendingUp className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/investment'),
     },
   ];
@@ -506,14 +478,14 @@ export default function StockMarketPage() {
   return (
     <>
       <SignedIn>
-        <div className="bg-[#ecf8e5] min-h-screen">
+        <div className="bg-[#1a1a1a] min-h-screen">
           {/* Fixed Sidebar */}
           <div className="fixed top-0 left-0 h-screen z-30">
             <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}>
-              <SidebarBody className="justify-between gap-10 bg-[#ecf8e5] h-full">
+              <SidebarBody className="justify-between gap-10 bg-[#1a1a1a] h-full">
                 <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
                   <div
-                    className="cursor-pointer"
+                    className="cursor-pointer py-2"
                     onMouseEnter={() => setSidebarOpen(true)}
                     onMouseLeave={() => setSidebarOpen(false)}
                   >
@@ -533,7 +505,7 @@ export default function StockMarketPage() {
                       label: user?.username || 'User',
                       href: "#",
                       icon: (
-                        <div className="h-7 w-7 shrink-0 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold">
+                        <div className="h-7 w-7 shrink-0 rounded-full bg-white text-black flex items-center justify-center text-sm font-semibold">
                           {(user?.username?.[0] || user?.firstName?.[0] || 'U').toUpperCase()}
                         </div>
                       ),
@@ -550,12 +522,12 @@ export default function StockMarketPage() {
             sidebarOpen ? "ml-64" : "ml-16"
           )}>
             {/* Fixed Top Navbar */}
-            <div className="sticky top-0 z-20 flex items-center h-[9.5vh] bg-[#ecf8e5] px-8 border-b border-gray-200/50">
+            <div className="sticky top-0 z-20 flex items-center h-[9.5vh] bg-[#1a1a1a] px-8 border-b border-gray-700/50">
               <div className="flex-1">
                 <div className="flex items-center gap-3">
                   <div>
-                    <h1 className="ml-4 text-2xl font-bold text-black">Stock Market Hub</h1>
-                    <p className="text-sm ml-4 text-gray-600">Comprehensive market analysis and portfolio tracking</p>
+                    <h1 className="ml-4 text-2xl font-bold text-white">Stock Market Hub</h1>
+                    <p className="text-sm ml-4 text-gray-400">Comprehensive market analysis and portfolio tracking</p>
                   </div>
                 </div>
               </div>
@@ -589,12 +561,12 @@ export default function StockMarketPage() {
             {/* ============================================================
             STOCK MARKET CONTENT AREA
             ============================================================ */}
-            <div className="min-h-[91vh] bg-[#ecf8e5] p-8">
+            <div className="min-h-[91vh] bg-[#1a1a1a] p-8">
               
               {/* Stock Search Section - Now always visible */}
               <div className="mb-8 ml-4">
-                <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-black border-opacity-10">
-                  <h2 className="text-xl font-bold text-black mb-4 flex items-center gap-2">
+                <div className="bg-[#2a2a2a] rounded-xl shadow-lg p-6 border border-gray-700">
+                  <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                     <IconSearch className="h-6 w-6" />
                     Search Stocks
                   </h2>
@@ -605,15 +577,15 @@ export default function StockMarketPage() {
                       value={searchSymbol}
                       onChange={(e) => setSearchSymbol(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && searchStock()}
-                      className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-black focus:outline-none text-black placeholder-gray-500"
+                      className="flex-1 px-4 py-3 border border-gray-600 bg-[#1a1a1a] rounded-lg focus:border-white focus:outline-none text-white placeholder-gray-500"
                     />
                     <button
                       onClick={searchStock}
                       disabled={searchLoading || !API_KEY}
-                      className="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 flex items-center gap-2 disabled:opacity-50"
+                      className="bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center gap-2 disabled:opacity-50"
                     >
                       {searchLoading ? (
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black"></div>
                       ) : (
                         <IconSearch className="h-5 w-5" />
                       )}
@@ -630,21 +602,21 @@ export default function StockMarketPage() {
                   animate={{ opacity: 1, y: 0 }}
                   className="mb-8"
                 >
-                  <div className="ml-4 bg-white rounded-xl shadow-lg p-8 border-2 border-black border-opacity-10">
+                  <div className="ml-4 bg-[#2a2a2a] rounded-xl shadow-lg p-8 border border-gray-700">
                     <div className="flex justify-between items-start mb-6">
                       <div className="flex items-center gap-4">
                         {selectedCompany?.logo && (
                           <img
                             src={selectedCompany.logo}
                             alt={`${selectedStock.symbol} logo`}
-                            className="w-16 h-16 rounded-lg object-contain bg-gray-50 p-2"
+                            className="w-16 h-16 rounded-lg object-contain bg-[#1a1a1a] p-2"
                           />
                         )}
                         <div>
                           <div className="flex items-center gap-3">
-                            <h2 className="text-3xl font-bold text-black">{selectedStock.symbol}</h2>
+                            <h2 className="text-3xl font-bold text-white">{selectedStock.symbol}</h2>
                           </div>
-                          <p className="text-gray-600">
+                          <p className="text-gray-400">
                             {selectedCompany?.name || selectedStock.name || 'Real-time Stock Price'}
                           </p>
                           {selectedCompany && (
@@ -656,9 +628,9 @@ export default function StockMarketPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-4xl font-bold text-black">${selectedStock.price}</div>
+                        <div className="text-4xl font-bold text-white">${selectedStock.price}</div>
                         <div className={`flex items-center gap-1 text-lg font-semibold ${
-                          parseFloat(selectedStock.change) >= 0 ? 'text-green-600' : 'text-red-600'
+                          parseFloat(selectedStock.change) >= 0 ? 'text-green-400' : 'text-red-400'
                         }`}>
                           {parseFloat(selectedStock.change) >= 0 ?
                             <IconArrowUp className="h-5 w-5" /> :
@@ -671,65 +643,65 @@ export default function StockMarketPage() {
 
                     {/* Enhanced Stock Metrics */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                      <div className="bg-gray-50 p-4 rounded-lg border">
-                        <p className="text-sm text-gray-600 mb-1">Open</p>
-                        <p className="text-xl font-semibold text-black">${selectedStock.open}</p>
+                      <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-700">
+                        <p className="text-sm text-gray-400 mb-1">Open</p>
+                        <p className="text-xl font-semibold text-white">${selectedStock.open}</p>
                       </div>
-                      <div className="bg-gray-50 p-4 rounded-lg border">
-                        <p className="text-sm text-gray-600 mb-1">High</p>
-                        <p className="text-xl font-semibold text-black">${selectedStock.high}</p>
+                      <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-700">
+                        <p className="text-sm text-gray-400 mb-1">High</p>
+                        <p className="text-xl font-semibold text-white">${selectedStock.high}</p>
                       </div>
-                      <div className="bg-gray-50 p-4 rounded-lg border">
-                        <p className="text-sm text-gray-600 mb-1">Low</p>
-                        <p className="text-xl font-semibold text-black">${selectedStock.low}</p>
+                      <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-700">
+                        <p className="text-sm text-gray-400 mb-1">Low</p>
+                        <p className="text-xl font-semibold text-white">${selectedStock.low}</p>
                       </div>
-                      <div className="bg-gray-50 p-4 rounded-lg border">
-                        <p className="text-sm text-gray-600 mb-1">Volume</p>
-                        <p className="text-xl font-semibold text-black">{selectedStock.volume}</p>
+                      <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-700">
+                        <p className="text-sm text-gray-400 mb-1">Volume</p>
+                        <p className="text-xl font-semibold text-white">{selectedStock.volume}</p>
                       </div>
                     </div>
 
                     {/* Additional Metrics */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                        <p className="text-sm text-gray-600 mb-1">52W High</p>
-                        <p className="text-xl font-semibold text-green-700">${selectedStock.high52}</p>
+                      <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-700">
+                        <p className="text-sm text-gray-400 mb-1">52W High</p>
+                        <p className="text-xl font-semibold text-green-400">${selectedStock.high52}</p>
                       </div>
-                      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                        <p className="text-sm text-gray-600 mb-1">52W Low</p>
-                        <p className="text-xl font-semibold text-green-700">${selectedStock.low52}</p>
+                      <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-700">
+                        <p className="text-sm text-gray-400 mb-1">52W Low</p>
+                        <p className="text-xl font-semibold text-green-400">${selectedStock.low52}</p>
                       </div>
-                      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                        <p className="text-sm text-gray-600 mb-1">P/E Ratio</p>
-                        <p className="text-xl font-semibold text-green-700">{selectedStock.pe}</p>
+                      <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-700">
+                        <p className="text-sm text-gray-400 mb-1">P/E Ratio</p>
+                        <p className="text-xl font-semibold text-green-400">{selectedStock.pe}</p>
                       </div>
-                      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                        <p className="text-sm text-gray-600 mb-1">Beta</p>
-                        <p className="text-xl font-semibold text-green-700">{selectedStock.beta}</p>
+                      <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-700">
+                        <p className="text-sm text-gray-400 mb-1">Beta</p>
+                        <p className="text-xl font-semibold text-green-400">{selectedStock.beta}</p>
                       </div>
                     </div>
 
                     {/* Company Information */}
                     {selectedCompany && (
-                      <div className="border-t pt-6">
-                        <h3 className="text-lg font-bold text-black mb-4">Company Information</h3>
+                      <div className="border-t border-gray-700 pt-6">
+                        <h3 className="text-lg font-bold text-white mb-4">Company Information</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                          <div className="bg-gray-50 p-4 rounded-lg">
-                            <p className="text-sm text-gray-600 mb-1">Market Cap</p>
-                            <p className="font-semibold text-black">
+                          <div className="bg-[#1a1a1a] p-4 rounded-lg">
+                            <p className="text-sm text-gray-400 mb-1">Market Cap</p>
+                            <p className="font-semibold text-white">
                               ${selectedCompany.marketCapitalization ?
                                 (selectedCompany.marketCapitalization / 1000).toFixed(2) + 'B' :
                                 'N/A'
                               }
                             </p>
                           </div>
-                          <div className="bg-gray-50 p-4 rounded-lg">
-                            <p className="text-sm text-gray-600 mb-1">Industry</p>
-                            <p className="font-semibold text-black">{selectedCompany.finnhubIndustry || 'N/A'}</p>
+                          <div className="bg-[#1a1a1a] p-4 rounded-lg">
+                            <p className="text-sm text-gray-400 mb-1">Industry</p>
+                            <p className="font-semibold text-white">{selectedCompany.finnhubIndustry || 'N/A'}</p>
                           </div>
-                          <div className="bg-gray-50 p-4 rounded-lg">
-                            <p className="text-sm text-gray-600 mb-1">IPO Date</p>
-                            <p className="font-semibold text-black">{selectedCompany.ipo || 'N/A'}</p>
+                          <div className="bg-[#1a1a1a] p-4 rounded-lg">
+                            <p className="text-sm text-gray-400 mb-1">IPO Date</p>
+                            <p className="font-semibold text-white">{selectedCompany.ipo || 'N/A'}</p>
                           </div>
                         </div>
                       </div>
@@ -740,7 +712,7 @@ export default function StockMarketPage() {
 
               {/* Navigation Tabs */}
               <div className="mb-8 ml-4">
-                <div className="flex space-x-1 bg-white rounded-lg p-1 border-2 border-black border-opacity-10 w-fit">
+                <div className="flex space-x-1 bg-[#2a2a2a] rounded-lg p-1 border border-gray-700 w-fit">
                   {[
                     { id: 'overview', label: 'Market Overview', icon: IconActivity },
                     { id: 'portfolio', label: 'My Portfolio', icon: IconWallet },
@@ -752,8 +724,8 @@ export default function StockMarketPage() {
                       className={cn(
                         "flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all duration-200",
                         activeTab === tab.id
-                          ? "bg-black text-white"
-                          : "text-gray-600 hover:text-black hover:bg-gray-50"
+                          ? "bg-white text-black"
+                          : "text-gray-400 hover:text-white hover:bg-[#1a1a1a]"
                       )}
                     >
                       <tab.icon className="h-5 w-5" />
@@ -769,22 +741,22 @@ export default function StockMarketPage() {
                   {/* Market Indices */}
                   {marketIndices.length > 0 && (
                     <div className="mb-8 ml-4">
-                      <h2 className="text-xl font-bold text-black mb-4 flex items-center gap-2">
+                      <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                         <IconChartBar className="h-6 w-6" />
                         Market Indices
                       </h2>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {marketIndices.map((index) => (
-                          <div key={index.symbol} className="bg-white rounded-xl shadow-lg p-6 border-2 border-black border-opacity-10">
+                          <div key={index.symbol} className="bg-[#2a2a2a] rounded-xl shadow-lg p-6 border border-gray-700">
                             <div className="flex justify-between items-center">
                               <div>
-                                <h3 className="text-lg font-bold text-black">{index.name}</h3>
-                                <p className="text-sm text-gray-600">{index.symbol}</p>
+                                <h3 className="text-lg font-bold text-white">{index.name}</h3>
+                                <p className="text-sm text-gray-400">{index.symbol}</p>
                               </div>
                               <div className="text-right">
-                                <div className="text-xl font-bold text-black">{index.price}</div>
+                                <div className="text-xl font-bold text-white">{index.price}</div>
                                 <div className={`flex items-center gap-1 text-sm font-semibold ${
-                                  parseFloat(index.change) >= 0 ? 'text-green-600' : 'text-red-600'
+                                  parseFloat(index.change) >= 0 ? 'text-green-400' : 'text-red-400'
                                 }`}>
                                   {parseFloat(index.change) >= 0 ?
                                     <IconArrowUp className="h-4 w-4" /> :
@@ -803,14 +775,14 @@ export default function StockMarketPage() {
                   {/* Popular Stocks Grid */}
                   <div className="mb-8 ml-4">
                     <div className="flex justify-between items-center mb-6">
-                      <h2 className="text-2xl font-bold text-black flex items-center gap-2">
+                      <h2 className="text-2xl font-bold text-white flex items-center gap-2">
                         <IconActivity className="h-7 w-7" />
                         Popular Stocks
                       </h2>
                       <button
                         onClick={loadPopularStocks}
                         disabled={loading || !API_KEY}
-                        className="bg-black text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 flex items-center gap-2 disabled:opacity-50"
+                        className="bg-white text-black px-4 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center gap-2 disabled:opacity-50"
                       >
                         <IconRefresh className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
                         Refresh
@@ -819,8 +791,8 @@ export default function StockMarketPage() {
 
                     {loading ? (
                       <div className="text-center py-12">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
-                        <p className="text-gray-600">Loading stock data...</p>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                        <p className="text-gray-400">Loading stock data...</p>
                       </div>
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -830,7 +802,7 @@ export default function StockMarketPage() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.2 }}
-                            className="bg-white rounded-xl shadow-lg p-6 border-2 border-black border-opacity-10 hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-black hover:border-opacity-30"
+                            className="bg-[#2a2a2a] rounded-xl shadow-lg p-6 border border-gray-700 hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-gray-500"
                             onClick={() => {
                               setSelectedStock(stock);
                               fetchCompanyProfile(stock.symbol).then(setSelectedCompany);
@@ -838,27 +810,27 @@ export default function StockMarketPage() {
                           >
                             <div className="flex justify-between items-start mb-4">
                               <div>
-                                <h3 className="text-xl font-bold text-black">{stock.symbol}</h3>
+                                <h3 className="text-xl font-bold text-white">{stock.symbol}</h3>
                                 <div className="flex items-center gap-1 text-sm">
-                                  <span className="text-gray-600">{stock.name || 'Stock Price'}</span>
+                                  <span className="text-gray-400">{stock.name || 'Stock Price'}</span>
                                 </div>
                               </div>
                               <div className="flex items-center gap-2">
                                 <div className={`p-2 rounded-full ${
-                                  parseFloat(stock.change) >= 0 ? 'bg-green-100' : 'bg-red-100'
+                                  parseFloat(stock.change) >= 0 ? 'bg-green-900/30' : 'bg-red-900/30'
                                 }`}>
                                   {parseFloat(stock.change) >= 0 ?
-                                    <IconTrendingUp className="h-6 w-6 text-green-600" /> :
-                                    <IconTrendingDown className="h-6 w-6 text-red-600" />
+                                    <IconTrendingUp className="h-6 w-6 text-green-400" /> :
+                                    <IconTrendingDown className="h-6 w-6 text-red-400" />
                                   }
                                 </div>
                               </div>
                             </div>
 
                             <div className="mb-4">
-                              <div className="text-2xl font-bold text-black mb-1">${stock.price}</div>
+                              <div className="text-2xl font-bold text-white mb-1">${stock.price}</div>
                               <div className={`flex items-center gap-1 ${
-                                parseFloat(stock.change) >= 0 ? 'text-green-600' : 'text-red-600'
+                                parseFloat(stock.change) >= 0 ? 'text-green-400' : 'text-red-400'
                               }`}>
                                 {parseFloat(stock.change) >= 0 ?
                                   <IconArrowUp className="h-4 w-4" /> :
@@ -870,7 +842,7 @@ export default function StockMarketPage() {
                               </div>
                             </div>
 
-                            <div className="flex justify-between text-sm text-gray-600">
+                            <div className="flex justify-between text-sm text-gray-400">
                               <span>High: ${stock.high}</span>
                               <span>Low: ${stock.low}</span>
                             </div>
@@ -883,22 +855,22 @@ export default function StockMarketPage() {
                   {/* Market Movers - Moved below Popular Stocks */}
                   <div className="mb-8 ml-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Top Gainers */}
-                    <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-black border-opacity-10">
-                      <h3 className="text-lg font-bold text-black mb-4 flex items-center gap-2">
-                        <IconTrendingUp className="h-5 w-5 text-green-600" />
+                    <div className="bg-[#2a2a2a] rounded-xl shadow-lg p-6 border border-gray-700">
+                      <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <IconTrendingUp className="h-5 w-5 text-green-400" />
                         Top Gainers
                       </h3>
                       <div className="space-y-3">
                         {topGainers.slice(0, 5).map((stock) => (
-                          <div key={stock.symbol} className="flex justify-between items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                          <div key={stock.symbol} className="flex justify-between items-center p-2 hover:bg-[#1a1a1a] rounded-lg cursor-pointer"
                                onClick={() => setSelectedStock(stock)}>
                             <div>
-                              <p className="font-semibold text-black">{stock.symbol}</p>
-                              <p className="text-sm text-gray-600">${stock.price}</p>
+                              <p className="font-semibold text-white">{stock.symbol}</p>
+                              <p className="text-sm text-gray-400">${stock.price}</p>
                             </div>
                             <div className="text-right">
-                              <p className="text-green-600 font-semibold">+{stock.changePercent}%</p>
-                              <p className="text-sm text-green-600">+{stock.change}</p>
+                              <p className="text-green-400 font-semibold">+{stock.changePercent}%</p>
+                              <p className="text-sm text-green-400">+{stock.change}</p>
                             </div>
                           </div>
                         ))}
@@ -906,22 +878,22 @@ export default function StockMarketPage() {
                     </div>
 
                     {/* Top Losers */}
-                    <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-black border-opacity-10">
-                      <h3 className="text-lg font-bold text-black mb-4 flex items-center gap-2">
-                        <IconTrendingDown className="h-5 w-5 text-red-600" />
+                    <div className="bg-[#2a2a2a] rounded-xl shadow-lg p-6 border border-gray-700">
+                      <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <IconTrendingDown className="h-5 w-5 text-red-400" />
                         Top Losers
                       </h3>
                       <div className="space-y-3">
                         {topLosers.slice(0, 5).map((stock) => (
-                          <div key={stock.symbol} className="flex justify-between items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                          <div key={stock.symbol} className="flex justify-between items-center p-2 hover:bg-[#1a1a1a] rounded-lg cursor-pointer"
                                onClick={() => setSelectedStock(stock)}>
                             <div>
-                              <p className="font-semibold text-black">{stock.symbol}</p>
-                              <p className="text-sm text-gray-600">${stock.price}</p>
+                              <p className="font-semibold text-white">{stock.symbol}</p>
+                              <p className="text-sm text-gray-400">${stock.price}</p>
                             </div>
                             <div className="text-right">
-                              <p className="text-red-600 font-semibold">{stock.changePercent}%</p>
-                              <p className="text-sm text-red-600">{stock.change}</p>
+                              <p className="text-red-400 font-semibold">{stock.changePercent}%</p>
+                              <p className="text-sm text-red-400">{stock.change}</p>
                             </div>
                           </div>
                         ))}
@@ -929,22 +901,22 @@ export default function StockMarketPage() {
                     </div>
 
                     {/* Most Active */}
-                    <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-black border-opacity-10">
-                      <h3 className="text-lg font-bold text-black mb-4 flex items-center gap-2">
-                        <IconActivity className="h-5 w-5 text-black" />
+                    <div className="bg-[#2a2a2a] rounded-xl shadow-lg p-6 border border-gray-700">
+                      <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <IconActivity className="h-5 w-5 text-white" />
                         Most Active
                       </h3>
                       <div className="space-y-3">
                         {mostActive.slice(0, 5).map((stock) => (
-                          <div key={stock.symbol} className="flex justify-between items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                          <div key={stock.symbol} className="flex justify-between items-center p-2 hover:bg-[#1a1a1a] rounded-lg cursor-pointer"
                                onClick={() => setSelectedStock(stock)}>
                             <div>
-                              <p className="font-semibold text-black">{stock.symbol}</p>
-                              <p className="text-sm text-gray-600">${stock.price}</p>
+                              <p className="font-semibold text-white">{stock.symbol}</p>
+                              <p className="text-sm text-gray-400">${stock.price}</p>
                             </div>
                             <div className="text-right">
-                              <p className="text-sm text-gray-600">Volume</p>
-                              <p className="text-sm font-semibold text-black">{stock.volume}</p>
+                              <p className="text-sm text-gray-400">Volume</p>
+                              <p className="text-sm font-semibold text-white">{stock.volume}</p>
                             </div>
                           </div>
                         ))}
@@ -958,21 +930,21 @@ export default function StockMarketPage() {
               {activeTab === 'portfolio' && (
                 <div className="ml-4">
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-black flex items-center gap-2">
+                    <h2 className="text-2xl font-bold text-white flex items-center gap-2">
                       <IconWallet className="h-7 w-7" />
                       My Portfolio
                     </h2>
                     <div className="flex gap-3">
                       <button
                         onClick={updatePortfolioPrices}
-                        className="bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition-all duration-200 flex items-center gap-2"
+                        className="bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-200 flex items-center gap-2"
                       >
                         <IconRefresh className="h-5 w-5" />
                         Update Prices
                       </button>
                       <button
                         onClick={() => setShowAddStock(!showAddStock)}
-                        className="bg-black text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 flex items-center gap-2"
+                        className="bg-white text-black px-4 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center gap-2"
                       >
                         <IconPlus className="h-5 w-5" />
                         Add Stock
@@ -982,79 +954,79 @@ export default function StockMarketPage() {
 
                   {/* Simplified Add Stock Form */}
                   {showAddStock && (
-                    <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-black border-opacity-10 mb-6">
-                      <h3 className="text-lg font-bold text-black mb-4">Add Stock to Portfolio</h3>
+                    <div className="bg-[#2a2a2a] rounded-xl shadow-lg p-6 border border-gray-700 mb-6">
+                      <h3 className="text-lg font-bold text-white mb-4">Add Stock to Portfolio</h3>
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <input
                           type="text"
                           placeholder="Stock Symbol (e.g., AAPL)"
                           value={newStock.symbol}
                           onChange={(e) => setNewStock({...newStock, symbol: e.target.value.toUpperCase()})}
-                          className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-black focus:outline-none text-black"
+                          className="px-3 py-2 border border-gray-600 bg-[#1a1a1a] rounded-lg focus:border-white focus:outline-none text-white"
                         />
                         <input
                           type="number"
                           placeholder="Number of Shares"
                           value={newStock.shares}
                           onChange={(e) => setNewStock({...newStock, shares: e.target.value})}
-                          className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-black focus:outline-none text-black"
+                          className="px-3 py-2 border border-gray-600 bg-[#1a1a1a] rounded-lg focus:border-white focus:outline-none text-white"
                         />
                         <input
                           type="date"
                           value={newStock.purchaseDate}
                           onChange={(e) => setNewStock({...newStock, purchaseDate: e.target.value})}
-                          className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-black focus:outline-none text-black"
+                          className="px-3 py-2 border border-gray-600 bg-[#1a1a1a] rounded-lg focus:border-white focus:outline-none text-white"
                         />
                         <div className="flex gap-2">
                           <button
                             onClick={addToPortfolio}
-                            className="flex-1 bg-black text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 flex items-center justify-center gap-2"
+                            className="flex-1 bg-white text-black px-4 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-2"
                           >
                             <IconCheck className="h-5 w-5" />
                             Add
                           </button>
                           <button
                             onClick={() => setShowAddStock(false)}
-                            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200"
+                            className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-all duration-200"
                           >
                             <IconX className="h-5 w-5" />
                           </button>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-500 mt-3">Purchase price will be set to current market price. Date is for reference only.</p>
+                      <p className="text-sm text-gray-400 mt-3">Purchase price will be set to current market price. Date is for reference only.</p>
                     </div>
                   )}
 
                   {/* Portfolio Summary */}
                   {portfolio.length > 0 && (
-                    <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-black border-opacity-10 mb-6">
-                      <h3 className="text-lg font-bold text-black mb-4">Portfolio Summary</h3>
+                    <div className="bg-[#2a2a2a] rounded-xl shadow-lg p-6 border border-gray-700 mb-6">
+                      <h3 className="text-lg font-bold text-white mb-4">Portfolio Summary</h3>
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                          <p className="text-sm text-gray-600 mb-1">Total Value</p>
-                          <p className="text-2xl font-bold text-green-700">
+                        <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-700">
+                          <p className="text-sm text-gray-400 mb-1">Total Value</p>
+                          <p className="text-2xl font-bold text-green-400">
                             ${portfolio.reduce((sum, stock) => sum + (stock.totalValue || 0), 0).toFixed(2)}
                           </p>
                         </div>
-                        <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                          <p className="text-sm text-gray-600 mb-1">Total Invested</p>
-                          <p className="text-2xl font-bold text-black">
+                        <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-700">
+                          <p className="text-sm text-gray-400 mb-1">Total Invested</p>
+                          <p className="text-2xl font-bold text-white">
                             ${portfolio.reduce((sum, stock) => sum + (stock.shares * stock.purchasePrice), 0).toFixed(2)}
                           </p>
                         </div>
-                        <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                          <p className="text-sm text-gray-600 mb-1">Total Gain/Loss</p>
+                        <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-700">
+                          <p className="text-sm text-gray-400 mb-1">Total Gain/Loss</p>
                           <p className={`text-2xl font-bold ${
                             portfolio.reduce((sum, stock) => sum + (stock.gainLoss || 0), 0) >= 0 
-                              ? 'text-green-600' 
-                              : 'text-red-600'
+                              ? 'text-green-400' 
+                              : 'text-red-400'
                           }`}>
                             ${portfolio.reduce((sum, stock) => sum + (stock.gainLoss || 0), 0).toFixed(2)}
                           </p>
                         </div>
-                        <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                          <p className="text-sm text-gray-600 mb-1">Total Stocks</p>
-                          <p className="text-2xl font-bold text-black">{portfolio.length}</p>
+                        <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-700">
+                          <p className="text-sm text-gray-400 mb-1">Total Stocks</p>
+                          <p className="text-2xl font-bold text-white">{portfolio.length}</p>
                         </div>
                       </div>
                     </div>
@@ -1062,50 +1034,50 @@ export default function StockMarketPage() {
 
                   {/* Portfolio Stocks */}
                   {portfolio.length > 0 ? (
-                    <div className="bg-white rounded-xl shadow-lg border-2 border-black border-opacity-10 overflow-hidden">
+                    <div className="bg-[#2a2a2a] rounded-xl shadow-lg border border-gray-700 overflow-hidden">
                       <div className="overflow-x-auto">
                         <table className="w-full">
-                          <thead className="bg-gray-50 border-b">
+                          <thead className="bg-[#1a1a1a] border-b border-gray-700">
                             <tr>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-black">Symbol</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-black">Shares</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-black">Purchase Price</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-black">Current Price</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-black">Total Value</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-black">Gain/Loss</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-black">%</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-black">Date</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-black">Actions</th>
+                              <th className="px-6 py-3 text-left text-sm font-semibold text-white">Symbol</th>
+                              <th className="px-6 py-3 text-left text-sm font-semibold text-white">Shares</th>
+                              <th className="px-6 py-3 text-left text-sm font-semibold text-white">Purchase Price</th>
+                              <th className="px-6 py-3 text-left text-sm font-semibold text-white">Current Price</th>
+                              <th className="px-6 py-3 text-left text-sm font-semibold text-white">Total Value</th>
+                              <th className="px-6 py-3 text-left text-sm font-semibold text-white">Gain/Loss</th>
+                              <th className="px-6 py-3 text-left text-sm font-semibold text-white">%</th>
+                              <th className="px-6 py-3 text-left text-sm font-semibold text-white">Date</th>
+                              <th className="px-6 py-3 text-left text-sm font-semibold text-white">Actions</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-gray-200">
+                          <tbody className="divide-y divide-gray-700">
                             {portfolio.map((stock, index) => (
-                              <tr key={index} className="hover:bg-gray-50">
+                              <tr key={index} className="hover:bg-[#1a1a1a]">
                                 <td className="px-6 py-4 whitespace-nowrap">
                                   <div>
-                                    <div className="text-sm font-bold text-black">{stock.symbol}</div>
-                                    <div className="text-sm text-gray-600">{stock.name}</div>
+                                    <div className="text-sm font-bold text-white">{stock.symbol}</div>
+                                    <div className="text-sm text-gray-400">{stock.name}</div>
                                   </div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{stock.shares}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">${stock.purchasePrice.toFixed(2)}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">${stock.currentPrice?.toFixed(2) || 'N/A'}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-black">${stock.totalValue?.toFixed(2) || 'N/A'}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{stock.shares}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">${stock.purchasePrice.toFixed(2)}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">${stock.currentPrice?.toFixed(2) || 'N/A'}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-white">${stock.totalValue?.toFixed(2) || 'N/A'}</td>
                                 <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${
-                                  (stock.gainLoss || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+                                  (stock.gainLoss || 0) >= 0 ? 'text-green-400' : 'text-red-400'
                                 }`}>
                                   ${stock.gainLoss?.toFixed(2) || 'N/A'}
                                 </td>
                                 <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${
-                                  (stock.gainLossPercent || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+                                  (stock.gainLossPercent || 0) >= 0 ? 'text-green-400' : 'text-red-400'
                                 }`}>
                                   {stock.gainLossPercent?.toFixed(2) || 'N/A'}%
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{stock.purchaseDate}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{stock.purchaseDate}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                   <button
                                     onClick={() => removeFromPortfolio(index)}
-                                    className="text-red-600 hover:text-red-800 transition-colors duration-200"
+                                    className="text-red-400 hover:text-red-300 transition-colors duration-200"
                                   >
                                     <IconTrash className="h-5 w-5" />
                                   </button>
@@ -1117,13 +1089,13 @@ export default function StockMarketPage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-white rounded-xl shadow-lg p-12 text-center border-2 border-black border-opacity-10">
-                      <IconWallet className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-xl font-bold text-black mb-2">No Stocks in Portfolio</h3>
-                      <p className="text-gray-600 mb-6">Add your first stock to start tracking your investments</p>
+                    <div className="bg-[#2a2a2a] rounded-xl shadow-lg p-12 text-center border border-gray-700">
+                      <IconWallet className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+                      <h3 className="text-xl font-bold text-white mb-2">No Stocks in Portfolio</h3>
+                      <p className="text-gray-400 mb-6">Add your first stock to start tracking your investments</p>
                       <button
                         onClick={() => setShowAddStock(true)}
-                        className="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 flex items-center gap-2 mx-auto"
+                        className="bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center gap-2 mx-auto"
                       >
                         <IconPlus className="h-5 w-5" />
                         Add Your First Stock
@@ -1136,95 +1108,53 @@ export default function StockMarketPage() {
               {/* News Tab */}
               {activeTab === 'news' && (
                 <div className="ml-4">
-                  <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-black flex items-center gap-2">
-                      <IconNews className="h-7 w-7" />
-                      Market News
-                    </h2>
-                    <button
-                      onClick={fetchMarketNews}
-                      className="bg-black text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 flex items-center gap-2"
-                    >
-                      <IconRefresh className="h-5 w-5" />
-                      Refresh
-                    </button>
-                  </div>
-
+                  <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                    <IconNews className="h-7 w-7" />
+                    Market News
+                  </h2>
+                  
                   {marketNews.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {marketNews.map((news) => (
-                        <div key={news.id} className="bg-white rounded-xl shadow-lg p-6 border-2 border-black border-opacity-10 hover:shadow-xl transition-all duration-300">
+                        <a
+                          key={news.id}
+                          href={news.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-[#2a2a2a] rounded-xl shadow-lg overflow-hidden border border-gray-700 hover:border-gray-500 transition-all duration-300 cursor-pointer group"
+                        >
                           {news.image && (
-                            <img
-                              src={news.image}
-                              alt={news.headline}
-                              className="w-full h-48 object-cover rounded-lg mb-4"
-                            />
-                          )}
-                          <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                            <IconClock className="h-4 w-4" />
-                            <span>{new Date(news.datetime * 1000).toLocaleDateString()}</span>
-                            <span>•</span>
-                            <span>{news.source}</span>
-                          </div>
-                          <h3 className="text-lg font-bold text-black mb-3 line-clamp-2">{news.headline}</h3>
-                          <p className="text-gray-600 text-sm mb-4 line-clamp-3">{news.summary}</p>
-                          <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-2">
-                              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">
-                                {news.category}
-                              </span>
-                              {news.related && (
-                                <span className="text-xs text-gray-500">{news.related}</span>
-                              )}
+                            <div className="relative h-48 overflow-hidden">
+                              <img
+                                src={news.image}
+                                alt={news.headline}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
                             </div>
-                            <a
-                              href={news.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-black hover:text-gray-700 transition-colors duration-200 font-semibold text-sm"
-                            >
-                              Read More
-                            </a>
+                          )}
+                          <div className="p-6">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="text-xs font-semibold text-gray-400 uppercase">{news.source}</span>
+                              <span className="text-xs text-gray-500">•</span>
+                              <span className="text-xs text-gray-500">
+                                {new Date(news.datetime * 1000).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <h3 className="text-lg font-bold text-white mb-2 group-hover:text-gray-300 transition-colors">
+                              {news.headline}
+                            </h3>
+                            <p className="text-sm text-gray-400 line-clamp-3">{news.summary}</p>
                           </div>
-                        </div>
+                        </a>
                       ))}
                     </div>
                   ) : (
-                    <div className="bg-white rounded-xl shadow-lg p-12 text-center border-2 border-black border-opacity-10">
-                      <IconNews className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-xl font-bold text-black mb-2">No News Available</h3>
-                      <p className="text-gray-600">Market news will appear here when available</p>
+                    <div className="bg-[#2a2a2a] rounded-xl shadow-lg p-12 text-center border border-gray-700">
+                      <IconNews className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+                      <h3 className="text-xl font-bold text-white mb-2">No News Available</h3>
+                      <p className="text-gray-400">Check back later for the latest market news</p>
                     </div>
                   )}
-                </div>
-              )}
-
-              {/* No API Key Warning */}
-              {!API_KEY && (
-                <div className="bg-white rounded-xl shadow-lg p-8 text-center border-2 border-yellow-400 border-opacity-50 bg-yellow-50 ml-4">
-                  <IconAlertTriangle className="h-16 w-16 text-yellow-600 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold text-black mb-3">Finnhub API Key Required</h3>
-                  <p className="text-gray-600 text-lg mb-4">
-                    Add your Finnhub API key to start tracking stocks with 60 requests per minute!
-                  </p>
-                  <div className="bg-gray-100 p-4 rounded-lg mb-4">
-                    <code className="text-sm text-gray-800">
-                      NEXT_PUBLIC_FINNHUB_API_KEY=your_key_here
-                    </code>
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    Get your free API key from{' '}
-                    <a
-                      href="https://finnhub.io"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline font-semibold"
-                    >
-                      finnhub.io
-                    </a>{' '}
-                    and add it to your .env.local file
-                  </p>
                 </div>
               )}
             </div>

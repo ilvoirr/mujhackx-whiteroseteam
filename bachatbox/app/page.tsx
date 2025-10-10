@@ -69,7 +69,7 @@ export default function HomePage() {
   const router = useRouter();
   
   // State for dynamic navbar background color
-  const [navbarBg, setNavbarBg] = useState('#f0fce4');
+  const [navbarBg, setNavbarBg] = useState('#1a1a1a');
 
   // Initialize particles.js on mount
   useEffect(() => {
@@ -112,13 +112,13 @@ export default function HomePage() {
       // Change background color based on scroll position
       if (navbarBottom >= vh * 2) {
         // When navbar bottom touches 200vh
-        setNavbarBg('#ffffff');
+        setNavbarBg('#0a0a0a');
       } else if (navbarBottom >= vh * 1) {
         // When navbar bottom touches 100vh
-        setNavbarBg('#ffffff');
+        setNavbarBg('#121212');
       } else {
         // Default color
-        setNavbarBg('#f0fce4');
+        setNavbarBg('#1a1a1a');
       }
     };
 
@@ -173,24 +173,17 @@ export default function HomePage() {
           {/* Logo/Icon SVG */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
             viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="text-[#48837e] w-[5vh] h-[5vh] md:w-[4.9vh] md:h-[4.9vh]"
+            fill="currentColor"
+            className="text-[#DAA520] w-[5vh] h-[5vh] md:w-[4.9vh] md:h-[4.9vh]"
+            style={{ filter: 'drop-shadow(0 0 8px rgba(218, 165, 32, 0.3))' }}
           >
-            <path d="M11 17h3v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a3.16 3.16 0 0 0 2-2h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-1a5 5 0 0 0-2-4V3a4 4 0 0 0-3.2 1.6l-.3.4H11a6 6 0 0 0-6 6v1a5 5 0 0 0 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1z"/>
-            <path d="M16 10h.01"/>
-            <path d="M2 8v1a2 2 0 0 0 2 2h1"/>
+            <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91c4.59-1.15 8-5.86 8-10.91V5l-8-3zM10.91 15.5l-3.41-3.41l1.41-1.41l2 2l4.59-4.59l1.41 1.41l-6 6z" />
           </svg>
 
           {/* App title - hidden on mobile */}
-          <h1 className="hidden md:inline-flex text-[1.6vw] font-semibold tracking-tight text-[#48837e] ml-3">
-            BachatBox
+          <h1 className="hidden md:inline-flex text-[1.6vw] font-bold tracking-wider text-[#f5f5f5] ml-3" style={{ letterSpacing: '0.05em' }}>
+            Tata Capital
           </h1>
         </div>
 
@@ -199,12 +192,12 @@ export default function HomePage() {
           {/* Show login/signup when user is signed out */}
           <SignedOut>
             <SignInButton>
-              <Button className="only-1366 bg-transparent text-[#48837e] hover:text-white hover:bg-[#48837e] md:text-[1.77vh] text-[4vw] px-3 md:px-4">
+              <Button className="only-1366 bg-transparent text-[#f5f5f5] border border-[#DAA520]/40 hover:text-[#1a1a1a] hover:bg-[#DAA520] hover:border-[#DAA520] md:text-[1.77vh] text-[4vw] px-3 md:px-4 transition-all duration-300">
                 Login
               </Button>
             </SignInButton>
             <SignUpButton>
-              <Button className="only-1366 bg-white text-[#48837e] hover:bg-[#48837e] hover:text-white md:text-[1.77vh] text-[4vw] px-3 md:px-6">
+              <Button className="only-1366 bg-[#DAA520] text-[#1a1a1a] hover:bg-[#C9A526] hover:text-[#0a0a0a] md:text-[1.77vh] text-[4vw] px-3 md:px-6 font-semibold transition-all duration-300">
                 Sign Up
               </Button>
             </SignUpButton>

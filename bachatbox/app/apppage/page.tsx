@@ -75,57 +75,45 @@ const TypingIndicator = () => (
 
 const Logo = () => {
   return (
-    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="text-black w-[10vh] h-[10vh] md:w-[4.9vh] md:h-[4.9vh]"
-      >
-        <path d="M11 17h3v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a3.16 3.16 0 0 0 2-2h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-1a5 5 0 0 0-2-4V3a4 4 0 0 0-3.2 1.6l-.3.4H11a6 6 0 0 0-6 6v1a5 5 0 0 0 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1z"/>
-        <path d="M16 10h.01"/>
-        <path d="M2 8v1a2 2 0 0 0 2 2h1"/>
-      </svg>
+    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-white">
+      <div className="text-white w-[4vh] h-[4vh] md:w-[3vh] md:h-[3vh] flex items-center justify-center shrink-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="w-full h-full"
+        >
+          {/* Corrected SVG path */}
+          <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91c4.59-1.15 8-5.86 8-10.91V5l-8-3zM10.91 15.5l-3.41-3.41l1.41-1.41l2 2l4.59-4.59l1.41 1.41l-6 6z" />
+        </svg>
+      </div>
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="text-[1.6vw] font-semibold tracking-tight text-black"
+        className="text-[1.4vw] font-semibold tracking-tight text-white"
       >
-        BachatBox
+         Tata Capital
       </motion.span>
     </div>
   );
 };
-
 const LogoIcon = () => {
   return (
-    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="text-black w-[5vh] h-[5vh] md:w-[4.9vh] md:h-[4.9vh]"
-      >
-        <path d="M11 17h3v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a3.16 3.16 0 0 0 2-2h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-1a5 5 0 0 0-2-4V3a4 4 0 0 0-3.2 1.6l-.3.4H11a6 6 0 0 0-6 6v1a5 5 0 0 0 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1z"/>
-        <path d="M16 10h.01"/>
-        <path d="M2 8v1a2 2 0 0 0 2 2h1"/>
-      </svg>
+    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-white">
+      <div className="text-white w-[4vh] h-[4vh] md:w-[3vh] md:h-[3vh] flex items-center justify-center shrink-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="w-full h-full"
+        >
+          {/* Corrected SVG path */}
+          <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91c4.59-1.15 8-5.86 8-10.91V5l-8-3zM10.91 15.5l-3.41-3.41l1.41-1.41l2 2l4.59-4.59l1.41 1.41l-6 6z" />
+        </svg>
+      </div>
     </div>
   );
 };
-
 export default function AppPage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
@@ -237,7 +225,7 @@ export default function AppPage() {
     console.log(`📱 Added fake SMS transaction: ${description} - ₹${amount}`);
   }, [transactions, saveTransactions]);
 
-  // Keyboard event listener for '\' (101) and ']' (400) - seamless and hidden
+  // Keyboard event listener for '\\' (101) and ']' (400) - seamless and hidden
   useEffect(() => {
     const handleKeyDown = (e: globalThis.KeyboardEvent) => {
       // Don't trigger when typing in input fields or textareas
@@ -389,7 +377,7 @@ export default function AppPage() {
       label: "Balance Sheet",
       href: "/apppage",
       icon: (
-        <IconReceipt className="h-7 w-7 shrink-0 text-neutral-700" />
+        <IconReceipt className="h-7 w-7 shrink-0 text-white" />
       ),
       onClick: () => router.push('/apppage'),
     },
@@ -397,52 +385,36 @@ export default function AppPage() {
       label: "Visualise Stats",
       href: "/visualise",
       icon: (
-        <IconChartBar className="h-7 w-7 shrink-0 text-neutral-700" />
+        <IconChartBar className="h-7 w-7 shrink-0 text-white" />
       ),
       onClick: () => router.push('/visualise'),
     },
     {
-      label: "AI Dashboard",
+      label: "Tata BFSI Dashboard",
       href: "/advice",
       icon: (
-        <IconTable className="h-7 w-7 shrink-0 text-neutral-700" />
+        <IconTable className="h-7 w-7 shrink-0 text-white" />
       ),
       onClick: () => router.push('/advice'),
     },
     {
-      label: "BudgetBot",
+      label: "Tata Loans Expert",
       href: "/chatbot",
       icon: (
-        <IconMessageCircle className="h-7 w-7 shrink-0 text-neutral-700" />
+        <IconMessageCircle className="h-7 w-7 shrink-0 text-white" />
       ),
       onClick: () => router.push('/chatbot'),
     },
     {
-      label: "What-If Simulator",
-      href: "/simulator", 
-      icon: (
-        <IconSparkles className="h-7 w-7 shrink-0 text-neutral-700" />
-      ),
-      onClick: () => router.push('/simulator'),
-    },
-    {
-      label: "SplitWise",
-      href: "/splitwise",
-      icon: (
-        <IconUsers className="h-7 w-7 shrink-0 text-neutral-700" />
-      ),
-      onClick: () => router.push('/splitwise'),
-    },
-    {
       label: "Financial Reads",
       href: "/financial-reads",
-      icon: <IconBook className="h-7 w-7 shrink-0 text-neutral-700" />,
+      icon: <IconBook className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/financial-reads'),
     },
     {
       label: "Stock Market",
       href: "/investment",
-      icon: <IconTrendingUp className="h-7 w-7 shrink-0 text-neutral-700" />,
+      icon: <IconTrendingUp className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/investment'),
     },
   ];
@@ -579,16 +551,14 @@ export default function AppPage() {
   return (
     <>
       <SignedIn>
-        {/* REMOVED: Hidden demo buttons div - now using keyboard shortcuts instead */}
-
-        <div className="bg-[#ecf8e5] min-h-screen">
+        <div className="bg-[#1a1a1a] min-h-screen">
           {/* Fixed Sidebar */}
           <div className="fixed top-0 left-0 h-screen z-30">
             <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}>
-              <SidebarBody className="justify-between gap-10 bg-[#ecf8e5] h-full">
+              <SidebarBody className="justify-between gap-10 bg-[#1a1a1a] h-full">
                 <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
                   <div 
-                    className="cursor-pointer"
+                    className="cursor-pointer py-2"
                     onMouseEnter={() => setSidebarOpen(true)}
                     onMouseLeave={() => setSidebarOpen(false)}
                   >
@@ -608,7 +578,7 @@ export default function AppPage() {
                       label: user?.username || 'User',
                       href: "#",
                       icon: (
-                        <div className="h-7 w-7 shrink-0 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold">
+                        <div className="h-7 w-7 shrink-0 rounded-full bg-white text-black flex items-center justify-center text-sm font-semibold">
                           {(user?.username?.[0] || user?.firstName?.[0] || 'U').toUpperCase()}
                         </div>
                       ),
@@ -625,7 +595,7 @@ export default function AppPage() {
             sidebarOpen ? "ml-64" : "ml-16"
           )}>
             {/* Fixed Top Navbar */}
-            <div className="sticky top-0 z-20 flex items-center h-[9.5vh] bg-[#ecf8e5] px-8 border-b border-gray-200/50">
+            <div className="sticky top-0 z-20 flex items-center h-[9.5vh] bg-[#1a1a1a] px-8 border-b border-gray-700/50">
               <div className="flex-1" />
               
               <div

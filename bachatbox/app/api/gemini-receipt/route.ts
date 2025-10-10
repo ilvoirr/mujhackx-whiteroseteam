@@ -1,43 +1,68 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-
 export async function POST(request: NextRequest) {
+  console.log('=== Receipt API Called ===');
+  
   try {
+    // Check API key first
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      console.error('❌ GEMINI_API_KEY is not set');
+      return NextResponse.json({ 
+        error: 'API key not configured',
+        message: 'Please add GEMINI_API_KEY to your .env.local file'
+      }, { status: 500 });
+    }
+
+    console.log('✅ API key found');
+
     const formData = await request.formData();
     const image = formData.get('image') as File;
-    const message = formData.get('message') as string;
-    const mode = formData.get('mode') as string;
 
     if (!image) {
+      console.error('❌ No image in request');
       return NextResponse.json({ error: 'No image provided' }, { status: 400 });
     }
 
+    console.log('✅ Image received:', {
+      name: image.name,
+      type: image.type,
+      size: image.size
+    });
+
+    // Convert image to base64
     const imageBuffer = Buffer.from(await image.arrayBuffer());
     const base64Image = imageBuffer.toString('base64');
+    
+    console.log('✅ Image converted to base64');
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    // Initialize Gemini with the CURRENT model (gemini-1.5 is deprecated as of Sept 2025)
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    
+    console.log('✅ Gemini model initialized: gemini-2.5-flash');
 
-    const prompt = `Analyze this receipt image and extract the following information in JSON format:
-
+    const prompt = `Analyze this receipt and extract information. Return ONLY a JSON object with this structure:
 {
-  "amount": [numeric value only, no currency symbols],
-  "type": "expense" or "income" (receipts are usually expenses unless clearly showing refunds/returns),
-  "description": "[merchant/store name or brief description]",
-  "category": "[food, transport, shopping, entertainment, healthcare, utilities, etc.]",
-  "confidence": [decimal between 0 and 1 indicating extraction confidence]
+  "amount": 123.45,
+  "type": "expense",
+  "description": "Store Name",
+  "category": "food",
+  "confidence": 0.9
 }
 
 Rules:
-- If amount is unclear, use 0
-- Most receipts are expenses unless it's clearly a refund
-- For merchant name, use the business name from the receipt
-- Category should be one word, lowercase
-- Be conservative with confidence scores
+- amount: total amount as a number (no currency symbols)
+- type: always "expense"
+- description: merchant/store name from the receipt
+- category: must be one of: food, transport, shopping, entertainment, healthcare, utilities, other
+- confidence: your confidence level from 0.0 to 1.0
 
-Return ONLY valid JSON, no additional text.`;
+Return ONLY the JSON object, no markdown formatting, no code blocks, no extra text.`;
 
+    console.log('📤 Sending request to Gemini...');
+    
     const result = await model.generateContent([
       prompt,
       {
@@ -51,38 +76,62 @@ Return ONLY valid JSON, no additional text.`;
     const response = await result.response;
     const text = response.text();
     
+    console.log('📥 Gemini response received');
+    console.log('Raw response:', text);
+    
+    // Clean markdown
+    let cleanText = text.replace(/``````\n?/gi, '').trim();
+    console.log('Cleaned response:', cleanText);
+    
+    // Parse JSON
+    let receiptData;
     try {
-      // Try to parse JSON from the response
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      receiptData = JSON.parse(cleanText);
+    } catch {
+      const jsonMatch = cleanText.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
-        const receiptData = JSON.parse(jsonMatch[0]);
-        
-        // Validate the extracted data
-        if (receiptData.amount && receiptData.type && receiptData.description) {
-          return NextResponse.json({ 
-            message: 'Receipt processed successfully',
-            receiptData: receiptData
-          });
-        }
+        receiptData = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error('No valid JSON in response');
       }
-      
+    }
+    
+    console.log('✅ Parsed data:', receiptData);
+    
+    // Validate required fields
+    if (!receiptData.amount || !receiptData.description) {
+      console.error('❌ Missing required fields:', receiptData);
       return NextResponse.json({ 
-        error: 'Could not extract reliable data from receipt',
-        message: 'Please try again or add manually'
-      }, { status: 400 });
-      
-    } catch (parseError) {
-      console.error('JSON parsing error:', parseError);
-      return NextResponse.json({ 
-        error: 'Could not parse receipt data',
-        message: 'Please try again or add manually'
+        error: 'Incomplete data',
+        message: 'Could not extract all required information from receipt'
       }, { status: 400 });
     }
+    
+    // Ensure proper types
+    receiptData.amount = parseFloat(receiptData.amount);
+    receiptData.type = receiptData.type || 'expense';
+    receiptData.category = receiptData.category || 'other';
+    receiptData.confidence = receiptData.confidence || 0.5;
+    
+    console.log('✅ SUCCESS - Final data:', receiptData);
+    
+    return NextResponse.json({ 
+      message: 'Receipt processed successfully',
+      receiptData: receiptData
+    });
 
   } catch (error) {
-    console.error('Error processing receipt:', error);
+    console.error('❌ ERROR:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    
     return NextResponse.json(
-      { error: 'Failed to process receipt' },
+      { 
+        error: 'Failed to process receipt',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }

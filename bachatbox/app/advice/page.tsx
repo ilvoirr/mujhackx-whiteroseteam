@@ -5,33 +5,19 @@ import { useState, useRef, useEffect } from 'react';
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
 import { Sidebar, SidebarBody, SidebarLink } from "../../components/ui/sidebar";
 import {
-  IconArrowLeft,
-  IconBrandTabler,
-  IconSettings,
-  IconUserBolt,
-  IconMessageCircle,
-  IconHistory,
-  IconPlant,
-  IconPackage,
-  IconGift,
-  IconTool,
-  IconChartBar,
-  IconBrain,
   IconReceipt,
-  IconPlus,
-  IconMinus,
-  IconTrash,
-  IconUsers,
+  IconChartBar,
   IconTable,
-  IconSparkles,
-  IconRefresh,
-  IconLoader,
+  IconMessageCircle,
+  IconBook,
   IconTrendingUp,
   IconTrendingDown,
   IconTarget,
+  IconSparkles,
+  IconRefresh,
+  IconLoader,
   IconShield,
-  IconAward,
-  IconBook
+  IconBrain,
 } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -59,29 +45,23 @@ type AdviceData = {
 
 const Logo = () => {
   return (
-    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="text-black w-[5vh] h-[5vh] md:w-[4.9vh] md:h-[4.9vh]"
-      >
-        <path d="M11 17h3v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a3.16 3.16 0 0 0 2-2h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-1a5 5 0 0 0-2-4V3a4 4 0 0 0-3.2 1.6l-.3.4H11a6 6 0 0 0-6 6v1a5 5 0 0 0 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1z"/>
-        <path d="M16 10h.01"/>
-        <path d="M2 8v1a2 2 0 0 0 2 2h1"/>
-      </svg>
+    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-white">
+      <div className="text-white w-[4vh] h-[4vh] md:w-[3vh] md:h-[3vh] flex items-center justify-center shrink-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="w-full h-full"
+        >
+          <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91c4.59-1.15 8-5.86 8-10.91V5l-8-3zM10.91 15.5l-3.41-3.41l1.41-1.41l2 2l4.59-4.59l1.41 1.41l-6 6z" />
+        </svg>
+      </div>
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="text-[1.6vw] font-semibold tracking-tight text-black"
+        className="text-[1.4vw] font-semibold tracking-tight text-white"
       >
-        BachatBox
+        Tata Capital
       </motion.span>
     </div>
   );
@@ -89,28 +69,22 @@ const Logo = () => {
 
 const LogoIcon = () => {
   return (
-    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="text-black w-[5vh] h-[5vh] md:w-[4.9vh] md:h-[4.9vh]"
-      >
-        <path d="M11 17h3v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a3.16 3.16 0 0 0 2-2h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-1a5 5 0 0 0-2-4V3a4 4 0 0 0-3.2 1.6l-.3.4H11a6 6 0 0 0-6 6v1a5 5 0 0 0 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1z"/>
-        <path d="M16 10h.01"/>
-        <path d="M2 8v1a2 2 0 0 0 2 2h1"/>
-      </svg>
+    <div className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-white">
+      <div className="text-white w-[4vh] h-[4vh] md:w-[3vh] md:h-[3vh] flex items-center justify-center shrink-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="w-full h-full"
+        >
+          <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91c4.59-1.15 8-5.86 8-10.91V5l-8-3zM10.91 15.5l-3.41-3.41l1.41-1.41l2 2l4.59-4.59l1.41 1.41l-6 6z" />
+        </svg>
+      </div>
     </div>
   );
 };
 
-// Updated AdviceCard Component with proper height handling
+// Updated AdviceCard Component with luxury black theme
 const AdviceCard = ({ title, content, icon, className, delay = 0 }: {
   title: string;
   content: string;
@@ -124,32 +98,32 @@ const AdviceCard = ({ title, content, icon, className, delay = 0 }: {
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.6, delay }}
       className={cn(
-        "bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100",
-        "flex flex-col justify-between", // Ensures content is distributed properly
+        "bg-gradient-to-br from-gray-900 to-black rounded-2xl p-6 shadow-2xl hover:shadow-3xl transition-all duration-300 border border-gray-700",
+        "flex flex-col justify-between",
         className
       )}
     >
       <div className="flex items-center gap-3 mb-4">
-        <div className="p-2 bg-black rounded-lg text-white flex-shrink-0">
+        <div className="p-2 bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg text-white flex-shrink-0">
           {icon}
         </div>
-        <h3 className="font-semibold text-gray-900 text-lg">{title}</h3>
+        <h3 className="font-semibold text-gray-100 text-lg">{title}</h3>
       </div>
-      <p className="text-gray-700 leading-relaxed flex-1 flex items-center">{content}</p>
+      <p className="text-gray-300 leading-relaxed flex-1 flex items-center">{content}</p>
     </motion.div>
   );
 };
 
-// Updated ScoreCard Component with proper height handling
+// Updated ScoreCard Component with luxury black theme
 const ScoreCard = ({ score, status, delay = 0 }: {
   score: number;
   status: string;
   delay?: number;
 }) => {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+    if (score >= 80) return 'text-green-400';
+    if (score >= 60) return 'text-yellow-400';
+    return 'text-red-400';
   };
 
   return (
@@ -157,15 +131,15 @@ const ScoreCard = ({ score, status, delay = 0 }: {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, delay }}
-      className="bg-gradient-to-br from-[#ecf8e5] to-white rounded-2xl p-8 shadow-lg h-full flex flex-col justify-center items-center"
+      className="bg-gradient-to-br from-gray-900 via-black to-gray-900 rounded-2xl p-8 shadow-2xl h-full flex flex-col justify-center items-center border border-gray-700"
     >
       <div className="mb-4 text-center">
         <div className={cn("text-6xl font-bold", getScoreColor(score))}>
           {score}
         </div>
-        <div className="text-gray-600 text-sm">Financial Health Score</div>
+        <div className="text-gray-400 text-sm mt-2">Financial Health Score</div>
       </div>
-      <div className="text-gray-800 font-medium text-center">{status}</div>
+      <div className="text-gray-200 font-medium text-center">{status}</div>
     </motion.div>
   );
 };
@@ -233,7 +207,10 @@ export default function AdvicePage() {
 
   // Generate AI advice
   const generateAdvice = async () => {
+    console.log('🚀 FRONTEND: Generate Advice Called');
+    
     if (transactions.length === 0) {
+      console.warn('⚠️ No transactions available');
       return;
     }
 
@@ -256,11 +233,13 @@ export default function AdvicePage() {
       
       if (response.ok) {
         setAdviceData(data.advice);
-        // Randomize layout for next generation
         setLayoutVariant(Math.floor(Math.random() * 3));
+      } else {
+        alert(`Error: ${data.error}`);
       }
     } catch (error) {
-      console.error('Error generating advice:', error);
+      console.error('❌ FRONTEND ERROR:', error);
+      alert(`Frontend error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -270,61 +249,37 @@ export default function AdvicePage() {
     {
       label: "Balance Sheet",
       href: "/apppage",
-      icon: (
-        <IconReceipt className="h-7 w-7 shrink-0 text-neutral-700" />
-      ),
+      icon: <IconReceipt className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/apppage'),
     },
     {
       label: "Visualise Stats",
       href: "/visualise",
-      icon: (
-        <IconChartBar className="h-7 w-7 shrink-0 text-neutral-700" />
-      ),
+      icon: <IconChartBar className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/visualise'),
     },
     {
-      label: "AI Dashboard",
+      label: "Tata BFSI Dashboard",
       href: "/advice",
-      icon: (
-        <IconTable className="h-7 w-7 shrink-0 text-neutral-700" />
-      ),
+      icon: <IconTable className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/advice'),
     },
     {
-      label: "BudgetBot",
+      label: "Tata Loans Expert",
       href: "/chatbot",
-      icon: (
-        <IconMessageCircle className="h-7 w-7 shrink-0 text-neutral-700" />
-      ),
+      icon: <IconMessageCircle className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/chatbot'),
-    },
-    {
-      label: "What-If Simulator",
-      href: "/simulator", 
-      icon: (
-        <IconSparkles className="h-7 w-7 shrink-0 text-neutral-700" />
-      ),
-      onClick: () => router.push('/simulator'),
-    },
-    {
-      label: "SplitWise",
-      href: "/splitwise",
-      icon: (
-        <IconUsers className="h-7 w-7 shrink-0 text-neutral-700" />
-      ),
-      onClick: () => router.push('/splitwise'),
     },
     {
       label: "Financial Reads",
       href: "/financial-reads",
-      icon: <IconBook className="h-7 w-7 shrink-0 text-neutral-700" />,
+      icon: <IconBook className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/financial-reads'),
     },
     {
       label: "Stock Market",
       href: "/investment",
-      icon: <IconTrendingUp className="h-7 w-7 shrink-0 text-neutral-700" />,
+      icon: <IconTrendingUp className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/investment'),
     },
   ];
@@ -341,12 +296,12 @@ export default function AdvicePage() {
   const totalExpenses = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
   const balance = totalIncome - totalExpenses;
 
-  // Layout variants with FIXED HEIGHT DISTRIBUTION
+  // Layout variants with proper height distribution
   const renderAdviceDashboard = () => {
     if (!adviceData) return null;
 
     const layouts = [
-      // Layout 1: Grid with score prominently displayed - FIXED HEIGHT DISTRIBUTION
+      // Layout 1: Grid with score prominently displayed
       <div key="layout1" className="grid grid-cols-12 grid-rows-6 gap-6 h-full">
         <div className="col-span-4 row-span-4 flex">
           <div className="flex-1">
@@ -390,7 +345,7 @@ export default function AdvicePage() {
         </div>
       </div>,
 
-      // Layout 2: Vertical flow with insights - FIXED HEIGHT DISTRIBUTION
+      // Layout 2: Vertical flow with insights
       <div key="layout2" className="flex gap-6 h-full">
         <div className="flex-1 flex flex-col space-y-4 h-full">
           <div className="flex-1">
@@ -427,7 +382,7 @@ export default function AdvicePage() {
         </div>
       </div>,
 
-      // Layout 3: Masonry-style asymmetric layout - FIXED HEIGHT DISTRIBUTION
+      // Layout 3: Masonry-style asymmetric layout
       <div key="layout3" className="grid grid-cols-4 grid-rows-4 gap-4 h-full">
         <div className="col-span-2 row-span-3">
           <ScoreCard score={adviceData.healthScore} status={adviceData.healthStatus} delay={0.2} />
@@ -478,14 +433,14 @@ export default function AdvicePage() {
   return (
     <>
       <SignedIn>
-        <div className="bg-[#ecf8e5] min-h-screen">
+        <div className="bg-[#1a1a1a] min-h-screen">
           {/* Fixed Sidebar */}
           <div className="fixed top-0 left-0 h-screen z-30">
             <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}>
-              <SidebarBody className="justify-between gap-10 bg-[#ecf8e5] h-full">
+              <SidebarBody className="justify-between gap-10 bg-[#1a1a1a] h-full">
                 <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
                   <div 
-                    className="cursor-pointer"
+                    className="cursor-pointer py-2"
                     onMouseEnter={() => setSidebarOpen(true)}
                     onMouseLeave={() => setSidebarOpen(false)}
                   >
@@ -505,7 +460,7 @@ export default function AdvicePage() {
                       label: user?.username || 'User',
                       href: "#",
                       icon: (
-                        <div className="h-7 w-7 shrink-0 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold">
+                        <div className="h-7 w-7 shrink-0 rounded-full bg-white text-black flex items-center justify-center text-sm font-semibold">
                           {(user?.username?.[0] || user?.firstName?.[0] || 'U').toUpperCase()}
                         </div>
                       ),
@@ -522,7 +477,7 @@ export default function AdvicePage() {
             sidebarOpen ? "ml-64" : "ml-16"
           )}>
             {/* Fixed Top Navbar */}
-            <div className="sticky top-0 z-20 flex items-center h-[9.5vh] bg-[#ecf8e5] px-8 border-b border-gray-200/50">
+            <div className="sticky top-0 z-20 flex items-center h-[9.5vh] bg-[#1a1a1a] px-8 border-b border-gray-700/50">
               <div className="flex-1" />
               
               <div
@@ -552,7 +507,7 @@ export default function AdvicePage() {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 overflow-hidden bg-white">
+            <div className="flex-1 overflow-hidden bg-[#1a1a1a]">
               <AnimatePresence mode="wait">
                 {isLoading ? (
                   <motion.div
@@ -560,12 +515,11 @@ export default function AdvicePage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="flex items-center justify-center h-[90.5vh] bg-gradient-to-br from-[#ecf8e5] to-white"
+                    className="flex items-center justify-center h-[90.5vh]"
                   >
                     <div className="text-center">
-                      <IconLoader className="w-16 h-16 animate-spin text-black mx-auto mb-4" />
-                      <h2 className="text-2xl font-semibold text-gray-800 mb-2">Analyzing Your Finances</h2>
-                      <p className="text-gray-600">AI is processing your financial data...</p>
+                      <IconLoader className="w-12 h-12 animate-spin text-gray-400 mx-auto mb-3" />
+                      <p className="text-gray-400 text-sm">Analyzing finances</p>
                     </div>
                   </motion.div>
                 ) : adviceData ? (
@@ -578,17 +532,16 @@ export default function AdvicePage() {
                   >
                     {/* Generate New Advice Button */}
                     <div className="mb-6 flex justify-between items-center flex-shrink-0">
-                      <h1 className="text-3xl ml-26  font-bold text-gray-900">AI Financial Dashboard</h1>
+                      <h1 className="text-3xl ml-8 font-bold text-gray-100">Tata BFSI Dashboard</h1>
                       <button
                         onClick={generateAdvice}
-                        className="inline-flex items-center gap-2 bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200"
+                        className="px-6 py-2.5 bg-gray-900 hover:bg-gray-800 text-gray-200 rounded-lg font-medium transition-colors border border-gray-700"
                       >
-                        <IconRefresh className="w-5 h-5" />
                         Regenerate
                       </button>
                     </div>
                     
-                    {/* Dynamic Dashboard Layout - THIS IS THE KEY FIX */}
+                    {/* Dynamic Dashboard Layout */}
                     <div className="flex-1 ml-8 min-h-0">
                       {renderAdviceDashboard()}
                     </div>
@@ -603,48 +556,47 @@ export default function AdvicePage() {
                   >
                     {transactions.length > 0 ? (
                       <div className="text-center">
-                        
-                        <h1 className="text-4xl font-bold text-gray-900 mb-4">AI Financial Advisor</h1>
-                        <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
-                          Ready to analyze your financial data and provide personalized insights
+                        <h1 className="text-3xl font-medium text-gray-100 mb-3">Tata BFSI Dashboard</h1>
+                        <p className="text-gray-400 text-base mb-10 max-w-xl mx-auto">
+                          Analyze your financial data and receive personalized insights
                         </p>
                         
                         {/* Quick Stats Preview */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 max-w-2xl mx-auto">
-                          <div className="bg-gray-50 rounded-lg p-4 text-center">
-                            <div className="text-sm text-gray-600">Total Income</div>
-                            <div className="text-xl font-semibold text-black">{formatCurrency(totalIncome)}</div>
-                          </div>
-                          <div className="bg-gray-50 rounded-lg p-4 text-center">
-                            <div className="text-sm text-gray-600">Total Expenses</div>
-                            <div className="text-xl font-semibold text-black">{formatCurrency(totalExpenses)}</div>
-                          </div>
-                          <div className="bg-gray-50 rounded-lg p-4 text-center">
-                            <div className="text-sm text-gray-600">Net Balance</div>
-                            <div className={`text-xl font-semibold ${balance >= 0 ? 'text-black' : 'text-red-600'}`}>
-                              {formatCurrency(balance)}
-                            </div>
-                          </div>
-                        </div>
+                        <div className="grid grid-cols-3 gap-6 mb-12 max-w-3xl mx-auto">
+  <div className="bg-gray-900 rounded-xl p-8 border border-gray-800">
+    <div className="text-sm text-gray-500 mb-2 uppercase tracking-wider">Income</div>
+    <div className="text-2xl font-semibold text-gray-200">{formatCurrency(totalIncome)}</div>
+  </div>
+  <div className="bg-gray-900 rounded-xl p-8 border border-gray-800">
+    <div className="text-sm text-gray-500 mb-2 uppercase tracking-wider">Expenses</div>
+    <div className="text-2xl font-semibold text-gray-200">{formatCurrency(totalExpenses)}</div>
+  </div>
+  <div className="bg-gray-900 rounded-xl p-8 border border-gray-800">
+    <div className="text-sm text-gray-500 mb-2 uppercase tracking-wider">Balance</div>
+    <div className={`text-2xl font-semibold ${balance >= 0 ? 'text-gray-200' : 'text-red-400'}`}>
+      {formatCurrency(balance)}
+    </div>
+  </div>
+</div>
+
 
                         <button
                           onClick={generateAdvice}
-                          className="inline-flex items-center gap-3 bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                          className="px-8 py-3 bg-gray-900 hover:bg-gray-800 text-gray-200 rounded-lg font-medium transition-colors border border-gray-700"
                         >
-                          
-                          Generate AI Dashboard
+                          Generate Dashboard
                         </button>
                       </div>
                     ) : (
-                      <div className="bg-gray-50 rounded-xl p-12 text-center">
-                        <IconChartBar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-gray-700 mb-2">No Financial Data Available</h3>
-                        <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                          Add some income and expense transactions to get personalized financial advice from our AI advisor.
+                      <div className="bg-gray-900 rounded-xl p-12 text-center border border-gray-800 max-w-md">
+                        <IconChartBar className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                        <h3 className="text-lg font-medium text-gray-300 mb-2">No Data Available</h3>
+                        <p className="text-gray-500 text-sm mb-6">
+                          Add transactions to receive financial insights
                         </p>
                         <button
                           onClick={() => router.push('/apppage')}
-                          className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200"
+                          className="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg font-medium transition-colors border border-gray-700"
                         >
                           Add Transactions
                         </button>

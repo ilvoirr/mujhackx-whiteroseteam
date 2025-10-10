@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import Groq from "groq-sdk";
 import { NextRequest, NextResponse } from 'next/server';
 import { adviceCache, cosineSim, compactContext } from '@/lib/adviceCache';
 
@@ -18,156 +18,128 @@ interface RequestBody {
   userId: string;
 }
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+// ============ DEBUGGING ============
+console.log('==========================================');
+console.log('CHATBOT API LOADED:');
+console.log('GROQ_API_KEY exists?', !!process.env.GROQ_API_KEY);
+console.log('==========================================');
+// ============ END DEBUGGING ============
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function POST(request: NextRequest) {
   let languageFallback: 'en' | 'hi' = 'en';
 
   try {
-    if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json({ error: 'Gemini API key not configured' }, { status: 500 });
+    console.log('\n🔵 Chatbot request received');
+    
+    if (!process.env.GROQ_API_KEY) {
+      console.error('❌ GROQ_API_KEY not configured');
+      return NextResponse.json({ error: 'Groq API key not configured' }, { status: 500 });
     }
 
     const body: RequestBody = await request.json();
     const { message, language, financialData, userId } = body;
     languageFallback = language;
 
+    console.log('📊 Language:', language, '| Balance:', financialData.balance);
+
     if (!message) {
-      return NextResponse.json({ error: 'Message is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Message required' }, { status: 400 });
     }
 
-    // RAG STEP 1: Check cache first for similar questions (saves 70% API calls)
+    // Cache check
     const cacheKey = `${userId}_${message.toLowerCase().trim()}`;
-    
-    // Exact match first
     const exactMatch = adviceCache.get(cacheKey);
     if (exactMatch) {
-      return NextResponse.json({ 
-        message: exactMatch, 
-        source: 'cache_exact',
-        cached: true 
-      });
+      console.log('✅ Cache hit');
+      return NextResponse.json({ message: exactMatch, cached: true });
     }
 
-    // Fuzzy match for similar questions
-    for (const [cachedQuestion, cachedAnswer] of adviceCache.entries()) {
-      if (cosineSim(cachedQuestion.split('_')[1] || '', message) > 0.85) {
-        return NextResponse.json({ 
-          message: cachedAnswer, 
-          source: 'cache_similar',
-          cached: true 
-        });
+    // Fuzzy match
+    for (const [cachedQ, cachedA] of adviceCache.entries()) {
+      if (cosineSim(cachedQ.split('_')[1] || '', message) > 0.85) {
+        console.log('✅ Similar cache hit');
+        return NextResponse.json({ message: cachedA, cached: true });
       }
     }
 
-    // RAG STEP 2: If no cache hit, prepare optimized context
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      generationConfig: { temperature: 0.9 },
-    });
+    console.log('⚠️ No cache - calling Groq');
 
-    // RESOURCE OPTIMIZATION: Compact financial context (reduces tokens by 60%)
     const financialContext = compactContext(financialData);
 
-    // Emotional context based on financial health
-    const getEmotionalContext = (balance: number, lang: 'en' | 'hi') => {
-      if (balance < -5000) {
-        return lang === 'hi' 
-          ? "मैं समझता हूं कि यह कठिन समय है। आप अकेले नहीं हैं।"
-          : "I understand this is a challenging time. You're not alone.";
-      } else if (balance > 10000) {
-        return lang === 'hi' 
-          ? "आपकी मेहनत रंग ला रही है! मैं आपकी वित्तीय यात्रा में साथ हूं।"
-          : "Your hard work is paying off! I'm here to support your journey.";
-      }
+    const getEmotional = (balance: number, lang: 'en' | 'hi') => {
+      if (balance < -5000) return lang === 'hi' ? "मैं समझता हूं कि यह कठिन है। आप अकेले नहीं।" : "I understand this is tough. You're not alone.";
+      if (balance > 10000) return lang === 'hi' ? "बढ़िया प्रगति!" : "Great progress!";
       return "";
     };
 
-    const emotionalNote = getEmotionalContext(financialData.balance, language);
+    const emotionalNote = getEmotional(financialData.balance, language);
 
     const systemPrompt = language === 'hi'
-      ? `आप BudgetBot हैं - एक दयालु, समझदार वित्तीय साथी जो उपयोगकर्ता की भावनाओं को समझते हैं।
+      ? `आप BudgetBot हैं - दयालु वित्तीय साथी।
 
-वित्तीय स्थिति: ${financialContext}
+स्थिति: ${financialContext}
 ${emotionalNote}
 
-लक्ष्य:
-- सहानुभूति और समझदारी दिखाना
-- व्यावहारिक सलाह देना बिना जजमेंट के
-- उम्मीद और प्रेरणा देना
-- व्यक्तिगत स्पर्श जोड़ना
-
-60-100 शब्दों में गर्मजोशी से जवाब दें।`
+60-100 शब्दों में गर्म, व्यावहारिक सलाह दें।`
       
-      : `You are BudgetBot - a compassionate, understanding financial companion who genuinely cares about user wellbeing.
+      : `You are BudgetBot - a caring financial companion.
 
-Financial Status: ${financialContext}
+Status: ${financialContext}
 ${emotionalNote}
 
-Mission:
-- Show empathy and understanding
-- Give practical advice without judgment
-- Inspire hope and confidence
-- Add personal touches
-- Celebrate progress and acknowledge struggles
+Respond in 60-100 words with warmth and practical advice.`;
 
-Respond in 60-100 words with warmth and care.`;
+    const prompt = `${systemPrompt}\n\nUser: "${message}"\n\nRespond helpfully:`;
 
-    const optimizedPrompt = `${systemPrompt}
+    console.log('🤖 Calling Groq...');
 
-User: "${message}"
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "llama-3.3-70b-versatile",
+      temperature: 0.9,
+      max_tokens: 500,
+    });
 
-Respond with genuine care and helpful guidance:`;
+    let text = chatCompletion.choices[0]?.message?.content || '';
+    console.log('✅ Response received');
 
-    // RAG STEP 3: Generate response only if no cache hit
-    const result = await model.generateContent(optimizedPrompt);
-    const response = await result.response;
-    let text = response.text();
-
-    // Add contextual emotional enhancers (no emojis)
-    const emotionalEnhancers = {
+    // Add emotional enhancers
+    const enhancers = {
       hi: {
-        positive: ["बहुत बढ़िया!", "शानदार प्रगति!", "गर्व की बात है!"],
-        supportive: ["मैं आपके साथ हूं", "हम मिलकर करेंगे", "आप कर सकते हैं"],
-        encouraging: ["धैर्य रखें", "हर कदम मायने रखता है", "सफलता आएगी"]
+        positive: ["बहुत बढ़िया!", "शानदार!", "गर्व है!"],
+        supportive: ["मैं साथ हूं", "हम करेंगे", "आप कर सकते हैं"]
       },
       en: {
-        positive: ["Excellent progress!", "You're doing great!", "Impressive work!"],
-        supportive: ["I'm here for you", "We'll work through this", "You've got this"],
-        encouraging: ["Stay strong", "Every step counts", "Success is coming"]
+        positive: ["Great job!", "Impressive!", "Well done!"],
+        supportive: ["I'm here", "We've got this", "You can do it"]
       }
     };
 
-    const enhancers = emotionalEnhancers[language];
+    const e = enhancers[language];
     if (financialData.balance > 5000) {
-      const randomPositive = enhancers.positive[Math.floor(Math.random() * enhancers.positive.length)];
-      text += ` ${randomPositive}`;
+      text += ` ${e.positive[Math.floor(Math.random() * e.positive.length)]}`;
     } else if (financialData.balance < -1000) {
-      const randomSupport = enhancers.supportive[Math.floor(Math.random() * enhancers.supportive.length)];
-      text = `${randomSupport}. ` + text;
+      text = `${e.supportive[Math.floor(Math.random() * e.supportive.length)]}. ` + text;
     }
 
-    // RAG STEP 4: Save to cache for future retrieval
     adviceCache.set(cacheKey, text);
+    console.log('✅ Cached\n');
 
     return NextResponse.json({
       message: text,
-      source: 'gemini_fresh',
       cached: false,
       timestamp: new Date().toISOString(),
     });
 
-  } catch (error) {
-    console.error('Gemini API Error:', error);
+  } catch (error: any) {
+    console.error('❌ ERROR:', error);
     
-    const emotionalErrorMessage = languageFallback === 'hi' 
-      ? 'मुझे खुशी होगी अगर मैं इस समय आपकी मदद कर सकूं, लेकिन तकनीकी समस्या है। कृपया फिर कोशिश करें।'
-      : 'I wish I could help you right now, but I\'m having technical difficulties. Please try again in a moment.';
+    const errMsg = languageFallback === 'hi' 
+      ? 'तकनीकी समस्या है। कृपया फिर कोशिश करें।'
+      : 'Technical issue. Please try again.';
 
-    return NextResponse.json({
-      message: emotionalErrorMessage,
-      source: 'error',
-      error: `Failed to generate response: ${error instanceof Error ? error.message : 'Unknown error'}`
-    }, { status: 500 });
+    return NextResponse.json({ message: errMsg, error: error.message }, { status: 500 });
   }
 }
