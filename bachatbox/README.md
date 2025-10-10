@@ -1,28 +1,36 @@
-# Tata Capital - AI-Powered Loan Sanctioning Prototype
+# Tata Capital: AI-Powered Loan Sanctioning Prototype
 
-This repository contains the prototype for Tata Capital's AI-powered loan sanctioning platform. It's a modern Next.js application that demonstrates a complete, end-to-end loan application and sanctioning process. The platform uses a sophisticated multi-agent system to simulate a real-world customer journey, from initial chatbot inquiry to the automated generation of a loan sanction letter.
+An advanced multi-agent system simulating a seamless, end-to-end loan approval journey, from initial customer inquiry to automated sanction letter generation.
 
-## Project Overview
+<br/>
 
-The core of this prototype is its ability to orchestrate multiple specialized AI agents to handle different stages of the loan application workflow. This provides a seamless and intelligent user experience, mimicking a conversation with a team of financial experts.
+[![Tata Capital Prototype Demo](https://img.youtube.com/vi/YOUR_YOUTUBE_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_YOUTUBE_VIDEO_ID)
 
-- **End-to-End Simulation**: The system demonstrates the entire customer lifecycle using synthetic data, mocked APIs, and simulated document uploads.
-- **Conversational AI**: Emphasis is placed on a natural, human-like chatbot flow that understands user intent and manages various scenarios, including edge cases like loan rejection.
-- **Agent Orchestration**: A master agent controls the workflow, delegating tasks to specialized worker agents for a seamless and efficient process.
+## Key Deliverables
 
-## The Agentic Workflow
+This prototype showcases a sophisticated, AI-driven approach to loan processing, built around a powerful multi-agent architecture. The system is designed to deliver a seamless, efficient, and intelligent customer experience.
 
-Our multi-agent system ensures that each part of the loan process is handled by a specialized expert:
+- **Complete End-to-End Automation**: Demonstrates the entire customer lifecycle, from the initial chatbot conversation to the automated generation and delivery of the loan sanction letter.
 
-- **Master Agent**: The central controller that manages the overall flow and facilitates communication between the other agents to ensure seamless task completion.
+- **Advanced Agentic Workflow**: A Master Agent orchestrates a team of specialized worker agents, ensuring a smooth and logical progression of tasks without manual intervention.
 
-- **Sales Agent**: The first point of contact. This agent interacts with the customer via the chatbot, understands their loan requirements (amount, tenure, purpose), and persuasively negotiates interest rates to close the deal.
+- **Human-like Conversational AI**: The chatbot flow is designed to understand customer intent, handle complex queries, and manage edge cases such as loan rejection or requests for additional document verification.
 
-- **Verification Agent**: Handles the KYC (Know Your Customer) process. It verifies personal data such as phone number and address against a dummy CRM database, ensuring the applicant's identity is confirmed.
+- **Realistic Simulation**: The system mimics a real-world financial environment using synthetic customer data, mocked APIs for CRM and credit checks, and simulated document uploads.
 
-- **Underwriting Agent**: The decision-maker. This agent reviews the applicant's credit history, verifies salary slips, and determines loan eligibility based on a prescribed logic. It has the authority to approve, reject, or request further verification.
+## The Multi-Agent System
 
-- **Sanction Letter Generator**: Upon approval from the Underwriting Agent, this automated component generates a formal PDF sanction letter detailing the loan terms.
+The backbone of this prototype is its team of specialized AI agents, each with a distinct role, all under the control of a central Master Agent.
+
+- **Master Agent**: The conductor of the orchestra. It controls the entire workflow, activates the appropriate agent at each stage, and ensures seamless data transfer and task completion between them.
+
+- **Sales Agent**: The frontline of customer interaction. This agent engages customers through the chatbot, captures their loan requirements (amount, tenure, purpose), and persuasively negotiates interest rates to close the deal.
+
+- **Verification Agent**: The gatekeeper of identity. It handles the KYC (Know Your Customer) process by verifying personal data (phone, address) against a dummy CRM database.
+
+- **Underwriting Agent**: The core decision-making engine. This agent reviews the applicant's credit history, verifies salary slips against prescribed logic, and determines final eligibility. It has the authority to approve, reject, or flag an application for manual review.
+
+- **Sanction Letter Generator**: The final step in the automated process. Once the Underwriting Agent grants approval, this component automatically generates a professional, downloadable PDF sanction letter with all the negotiated terms.
 
 ## Technology Stack
 
@@ -35,16 +43,13 @@ Our multi-agent system ensures that each part of the loan process is handled by 
 
 ## Getting Started
 
-Follow these instructions to get the project running on your local machine.
-
 ### Prerequisites
-
 - Node.js (v18 or later)
 - npm or yarn
 
 ### 1. Installation
 
-Navigate to the project directory and install the required dependencies:
+Navigate to the project directory and install the dependencies:
 
 ```bash
 npm install
@@ -52,7 +57,7 @@ npm install
 
 ### 2. Environment Variables
 
-Create a `.env.local` file in the root of the project (`/bachatbox/bachatbox/.env.local`) and add the necessary API keys and Clerk credentials. These are required for the AI and authentication features to function correctly.
+Create a `.env.local` file in the root of the project and add your API keys:
 
 ```env
 # Clerk Authentication
@@ -69,20 +74,10 @@ NEXT_PUBLIC_FINNHUB_API_KEY=your_finnhub_api_key
 
 ### 3. Running the Development Server
 
-Once the dependencies are installed and the environment variables are set, you can start the development server:
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
-
-## Demonstration Flow
-
-To experience the full end-to-end process:
-
-1.  **Initial Interaction**: Start a conversation with the **Tata Loans Expert** chatbot.
-2.  **Negotiation**: Interact with the Sales Agent to define your loan amount, tenure, and finalize the interest rate.
-3.  **KYC Process**: The Verification Agent will guide you through the KYC process, where you'll provide your details.
-4.  **Underwriting**: The Underwriting Agent will review your application. Based on the simulated logic, your loan will be approved or rejected.
-5.  **Sanction Letter**: If approved, the Sanction Letter Generator will automatically create a downloadable PDF of your loan sanction letter.
+Open [http://localhost:3000](http://localhost:3000) to view the application.

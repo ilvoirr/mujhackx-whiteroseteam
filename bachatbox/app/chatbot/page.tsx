@@ -275,7 +275,7 @@ export default function LoanAgentPage() {
           </div>
 
           {/* Main Content */}
-          <div className={cn("flex-1 transition-all", sidebarOpen ? "ml-64" : "ml-16")}>
+          <div className={cn("flex-1 transition-all", sidebarOpen ? "ml-64" : "ml-30")}>
             {/* Topbar */}
             <div className="sticky top-0 z-20 h-[9.5vh] bg-gradient-to-r from-black via-neutral-900 to-black px-8 border-b border-neutral-800 flex items-center justify-between">
               <div className="flex items-center gap-3">
