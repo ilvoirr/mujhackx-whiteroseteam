@@ -94,7 +94,7 @@ export default function LoanAgentPage() {
     if (messages.length === 0) {
       setMessages([{
         id: Date.now(),
-        text: "Welcome to Tata Capital. I'm your loan specialist. Tell me what loan you need - amount, purpose, and tenure.",
+        text: `Hi there! I'm Raj from Tata Capital. ${user?.firstName ? `Nice to meet you, ${user.firstName}!` : 'Great to connect with you!'} How can I help you with your financial goals today?`,
         sender: 'agent',
         agent: '💼 Sales Agent'
       }]);
@@ -140,8 +140,10 @@ export default function LoanAgentPage() {
     setLoading(true);
 
     try {
+      // Check if message contains loan amount details
       const { amount, tenure, purpose } = extractLoan(userInput);
       
+      // If specific loan details found, show proposal
       if (stage === 'sales' && amount > 0) {
         const rate = 10.5;
         const emi = calculateEMI(amount, rate, tenure);
@@ -150,44 +152,63 @@ export default function LoanAgentPage() {
         setTimeout(() => {
           setMessages(prev => [...prev, {
             id: Date.now(),
-            text: `Perfect! Here's your loan proposal:\n\n💰 Amount: ₹${amount.toLocaleString()}\n📅 Tenure: ${tenure} months\n📊 Rate: ${rate}% p.a.\n💳 EMI: ₹${emi.toLocaleString()}\n🎯 Purpose: ${purpose}\n\nShall we proceed with KYC verification? (Type "yes" to continue)`,
+            text: `Perfect! Let me prepare that for you:\n\n💰 Loan Amount: ₹${amount.toLocaleString()}\n📅 Tenure: ${tenure} months (${tenure/12} years)\n📊 Interest Rate: ${rate}% p.a.\n💳 Monthly EMI: ₹${emi.toLocaleString()}\n🎯 Purpose: ${purpose}\n\nThis looks good! Would you like to proceed with the application? I'll need to collect some documents for KYC verification.`,
             sender: 'agent',
             agent: '💼 Sales Agent'
           }]);
           setLoading(false);
         }, 1000);
-      } else if (stage === 'sales' && userInput.toLowerCase().includes('yes')) {
+        return;
+      }
+
+      // Call AI agent with conversation history
+      const res = await fetch('/api/loan-agent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          message: userInput,
+          conversationHistory: messages,
+          stage: stage
+        })
+      });
+      
+      const data = await res.json();
+      
+      // Check if customer is ready to proceed (detected by AI)
+      if (data.shouldTransition && stage === 'sales') {
         setStage('kyc');
-        setShowKYC(true);
         setMessages(prev => [...prev, {
           id: Date.now(),
-          text: "Great! Opening KYC verification form...",
-          sender: 'agent',
-          agent: '🔐 Verification Agent'
-        }]);
-        setLoading(false);
-      } else {
-        // Default AI response
-        const res = await fetch('/api/loan-agent', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: userInput })
-        });
-        const data = await res.json();
-        
-        setMessages(prev => [...prev, {
-          id: Date.now(),
-          text: data.message || "I can help you with loans. Please specify the amount and purpose.",
+          text: data.message,
           sender: 'agent',
           agent: '💼 Sales Agent'
         }]);
-        setLoading(false);
+        
+        setTimeout(() => {
+          setMessages(prev => [...prev, {
+            id: Date.now(),
+            text: "Excellent! Let me get your KYC verification started. I'm opening the secure form now...",
+            sender: 'agent',
+            agent: '🔐 Verification Agent'
+          }]);
+          setTimeout(() => setShowKYC(true), 800);
+        }, 1500);
+      } else {
+        setMessages(prev => [...prev, {
+          id: Date.now(),
+          text: data.message || "I'm here to help you with your loan needs. What would you like to know?",
+          sender: 'agent',
+          agent: stage === 'sales' ? '💼 Sales Agent' : '🔐 Verification Agent'
+        }]);
       }
+      
+      setLoading(false);
     } catch (err) {
       setMessages(prev => [...prev, {
         id: Date.now(),
-        text: "Error connecting. Please try again.",
-        sender: 'agent'
+        text: "I apologize for the technical issue. Let me try to help you - could you tell me what loan you're interested in?",
+        sender: 'agent',
+        agent: '💼 Sales Agent'
       }]);
       setLoading(false);
     }
@@ -198,7 +219,7 @@ export default function LoanAgentPage() {
     setStage('underwriting');
     setMessages(prev => [...prev, {
       id: Date.now(),
-      text: "KYC verified successfully! Processing your credit check...",
+      text: `Thank you ${kycName}! Your KYC documents have been received. Our underwriting team is now processing your application...`,
       sender: 'agent',
       agent: '📊 Underwriting Agent'
     }]);
@@ -209,7 +230,7 @@ export default function LoanAgentPage() {
       if (approved) {
         setMessages(prev => [...prev, {
           id: Date.now(),
-          text: `🎉 Congratulations! Your loan is APPROVED!\n\nApproved Amount: ₹${loanData?.amount.toLocaleString()}\nTenure: ${loanData?.tenure} months\nRate: ${loanData?.rate}% p.a.\nMonthly EMI: ₹${loanData?.emi.toLocaleString()}\n\nGenerating sanction letter...`,
+          text: `🎉 Fantastic news! Your loan application has been APPROVED!\n\nHere are your final terms:\n✓ Amount: ₹${loanData?.amount.toLocaleString()}\n✓ Tenure: ${loanData?.tenure} months\n✓ Rate: ${loanData?.rate}% p.a.\n✓ Monthly EMI: ₹${loanData?.emi.toLocaleString()}\n\nPreparing your official sanction letter...`,
           sender: 'agent',
           agent: '📊 Underwriting Agent'
         }]);
@@ -217,31 +238,326 @@ export default function LoanAgentPage() {
       } else {
         setMessages(prev => [...prev, {
           id: Date.now(),
-          text: "Unfortunately, your application is under review. Our team will contact you within 48 hours.",
+          text: "Your application requires additional review. Our senior underwriting team will contact you within 24-48 hours with next steps. Thank you for choosing Tata Capital!",
           sender: 'agent',
           agent: '📊 Underwriting Agent'
         }]);
       }
-    }, 2000);
+    }, 2500);
   };
 
-  const generatePDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(20);
-    doc.text('TATA CAPITAL', 105, 20, { align: 'center' });
-    doc.setFontSize(14);
-    doc.text('LOAN SANCTION LETTER', 105, 35, { align: 'center' });
-    doc.setFontSize(11);
-    doc.text(`Dear ${user?.fullName || kycName},`, 20, 55);
-    doc.text('Your loan has been approved with following terms:', 20, 65);
-    doc.text(`Amount: ₹${loanData?.amount.toLocaleString()}`, 20, 80);
-    doc.text(`Tenure: ${loanData?.tenure} months`, 20, 90);
-    doc.text(`Rate: ${loanData?.rate}% p.a.`, 20, 100);
-    doc.text(`EMI: ₹${loanData?.emi.toLocaleString()}`, 20, 110);
-    doc.text(`Purpose: ${loanData?.purpose}`, 20, 120);
-    doc.text('Valid for 30 days from date of issue.', 20, 140);
-    doc.save('Tata_Sanction_Letter.pdf');
+ const generatePDF = () => {
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.width;
+  const pageHeight = doc.internal.pageSize.height;
+  const margin = 20;
+  let yPos = 20;
+
+  // Helper function to add new page
+  const addNewPage = () => {
+    doc.addPage();
+    yPos = 20;
   };
+
+  // Helper function to check if we need new page
+  const checkPageBreak = (requiredSpace: number) => {
+    if (yPos + requiredSpace > pageHeight - 20) {
+      addNewPage();
+    }
+  };
+
+  // PAGE 1 - HEADER & MAIN DETAILS
+  // Logo Area (simulated with text box)
+  doc.setFillColor(106, 13, 173); // Tata purple
+  doc.rect(margin, yPos, 40, 15, 'F');
+  doc.setFontSize(10);
+  doc.setTextColor(255, 255, 255);
+  doc.text('TATA', margin + 20, yPos + 10, { align: 'center' });
+  
+  // Company Header
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text('TATA CAPITAL LIMITED', pageWidth / 2, yPos + 10, { align: 'center' });
+  
+  yPos += 20;
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.text('CIN: L65910MH1991PLC060670', pageWidth / 2, yPos, { align: 'center' });
+  yPos += 5;
+  doc.text('Registered Office: 11th Floor, Tower A, Peninsula Business Park, Ganpatrao Kadam Marg,', pageWidth / 2, yPos, { align: 'center' });
+  yPos += 5;
+  doc.text('Lower Parel, Mumbai - 400013 | Tel: 022-6141-8282 | www.tatacapital.com', pageWidth / 2, yPos, { align: 'center' });
+  
+  // Horizontal line
+  yPos += 8;
+  doc.setLineWidth(0.5);
+  doc.line(margin, yPos, pageWidth - margin, yPos);
+  
+  // Reference and Date
+  yPos += 10;
+  doc.setFontSize(9);
+  doc.text(`Ref No: TC/SL/${Date.now().toString().slice(-8)}`, margin, yPos);
+  doc.text(`Date: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`, pageWidth - margin - 40, yPos);
+  
+  // Customer Address
+  yPos += 15;
+  doc.setFont('helvetica', 'normal');
+  doc.text('To,', margin, yPos);
+  yPos += 7;
+  doc.setFont('helvetica', 'bold');
+  doc.text(user?.fullName || kycName, margin, yPos);
+  yPos += 7;
+  doc.setFont('helvetica', 'normal');
+  doc.text(`PAN: ${kycPan}`, margin, yPos);
+  yPos += 7;
+  doc.text(`Aadhaar: XXXX-XXXX-${kycAadhaar.slice(-4)}`, margin, yPos);
+  
+  // Subject Line
+  yPos += 15;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.text('Subject: Sanction of Loan Facility', margin, yPos);
+  
+  // Salutation
+  yPos += 12;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.text(`Dear ${user?.firstName || kycName.split(' ')[0]},`, margin, yPos);
+  
+  // Opening Paragraph
+  yPos += 10;
+  const openingText = `We are pleased to inform you that Tata Capital Limited ("the Company") has sanctioned a ${loanData?.purpose} 
+in your favor, subject to the terms and conditions mentioned herein and as per your loan application dated ${new Date().toLocaleDateString('en-IN')}.`;
+  
+  const splitOpening = doc.splitTextToSize(openingText, pageWidth - 2 * margin);
+  doc.text(splitOpening, margin, yPos);
+  yPos += splitOpening.length * 6;
+
+  // Loan Details Box
+  yPos += 8;
+  doc.setFillColor(245, 245, 245);
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 75, 'F');
+  doc.setDrawColor(200, 200, 200);
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 75);
+  
+  yPos += 10;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.text('SANCTIONED LOAN DETAILS', pageWidth / 2, yPos, { align: 'center' });
+  
+  yPos += 12;
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  
+  const loanDetails = [
+    ['Loan Amount Sanctioned:', `₹${loanData?.amount.toLocaleString('en-IN')} (Rupees ${numberToWords(loanData?.amount || 0)} Only)`],
+    ['Purpose of Loan:', loanData?.purpose || 'Personal'],
+    ['Rate of Interest:', `${loanData?.rate}% per annum (Fixed)`],
+    ['Loan Tenure:', `${loanData?.tenure} months (${Math.floor((loanData?.tenure || 0) / 12)} years ${(loanData?.tenure || 0) % 12} months)`],
+    ['EMI Amount:', `₹${loanData?.emi.toLocaleString('en-IN')} per month`],
+    ['Processing Fee:', `₹${Math.round((loanData?.amount || 0) * 0.02).toLocaleString('en-IN')} (2% of loan amount + GST)`],
+  ];
+  
+  loanDetails.forEach(([label, value]) => {
+    doc.setFont('helvetica', 'bold');
+    doc.text(label, margin + 5, yPos);
+    doc.setFont('helvetica', 'normal');
+    const valueLines = doc.splitTextToSize(value, 100);
+    doc.text(valueLines, margin + 65, yPos);
+    yPos += Math.max(7, valueLines.length * 6);
+  });
+
+  // Total Repayment Amount
+  yPos += 5;
+  const totalAmount = (loanData?.emi || 0) * (loanData?.tenure || 0);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Total Amount Payable:', margin + 5, yPos);
+  doc.text(`₹${totalAmount.toLocaleString('en-IN')}`, margin + 65, yPos);
+
+  // Validity
+  yPos += 15;
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'italic');
+  const validityDate = new Date();
+  validityDate.setDate(validityDate.getDate() + 30);
+  doc.text(`* This sanction is valid until ${validityDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`, margin, yPos);
+
+  // PAGE 2 - TERMS & CONDITIONS
+  addNewPage();
+  
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.text('TERMS AND CONDITIONS', pageWidth / 2, yPos, { align: 'center' });
+  
+  yPos += 12;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  
+  const termsAndConditions = [
+    {
+      title: '1. Disbursement',
+      content: 'The loan amount shall be disbursed to your registered bank account within 3-5 working days upon submission of all required documents and fulfillment of pre-disbursement conditions.'
+    },
+    {
+      title: '2. Repayment',
+      content: `The loan shall be repayable in ${loanData?.tenure} Equated Monthly Installments (EMIs) of ₹${loanData?.emi.toLocaleString('en-IN')} each. The first EMI shall be due on the 5th day of the month following the date of disbursement. EMIs shall be recovered through Electronic Clearing Service (ECS) / NACH from your designated bank account.`
+    },
+    {
+      title: '3. Interest Calculation',
+      content: `Interest shall be calculated on a daily reducing balance basis at the rate of ${loanData?.rate}% per annum. In case of any change in RBI guidelines or market conditions, the Company reserves the right to revise the interest rate after giving you prior notice.`
+    },
+    {
+      title: '4. Prepayment and Foreclosure',
+      content: 'You may prepay the loan in full or in part at any time during the loan tenure. Prepayment charges of 4% + GST on the outstanding principal amount shall be applicable if foreclosure is done within 12 months from the date of disbursement. After 12 months, foreclosure is allowed without any charges.'
+    },
+    {
+      title: '5. Penal Charges',
+      content: 'In case of default or delay in payment of EMI, penal interest @2% per month on the outstanding EMI amount shall be charged. Additionally, a bounce charge of ₹500 + GST shall be levied for each EMI dishonor.'
+    },
+    {
+      title: '6. Documentation',
+      content: 'You are required to submit the following documents within 7 days: (a) Signed loan agreement, (b) Post-dated cheques for all EMIs, (c) ECS/NACH mandate form, (d) KYC documents, and (e) Any other documents as specified by the Company.'
+    },
+    {
+      title: '7. Insurance',
+      content: 'It is mandatory to obtain loan protection insurance as per the Company\'s policy. The insurance premium shall be borne by you and can be added to the loan amount or paid separately.'
+    },
+    {
+      title: '8. Events of Default',
+      content: 'The loan shall be recalled immediately if: (a) You fail to pay 3 consecutive EMIs, (b) You provide false information, (c) You are declared insolvent, (d) You violate any terms of this agreement.'
+    },
+  ];
+
+  termsAndConditions.forEach((term, index) => {
+    checkPageBreak(25);
+    doc.setFont('helvetica', 'bold');
+    doc.text(term.title, margin, yPos);
+    yPos += 6;
+    doc.setFont('helvetica', 'normal');
+    const contentLines = doc.splitTextToSize(term.content, pageWidth - 2 * margin);
+    doc.text(contentLines, margin, yPos);
+    yPos += contentLines.length * 5 + 5;
+  });
+
+  // PAGE 3 - ADDITIONAL CONDITIONS & ACCEPTANCE
+  addNewPage();
+  
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.text('ADDITIONAL CONDITIONS', pageWidth / 2, yPos, { align: 'center' });
+  
+  yPos += 12;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+
+  const additionalConditions = [
+    {
+      title: '9. Credit Bureau Reporting',
+      content: 'Your credit history, including repayment track record, will be shared with Credit Information Companies (CIBIL, Experian, Equifax, CRIF High Mark) as per RBI guidelines.'
+    },
+    {
+      title: '10. Set-Off Rights',
+      content: 'The Company shall have the right to set-off any amounts due from you against any deposits or amounts held by the Company on your behalf.'
+    },
+    {
+      title: '11. Governing Law',
+      content: 'This agreement shall be governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of courts in Mumbai, Maharashtra.'
+    },
+    {
+      title: '12. Communication',
+      content: 'All communications shall be sent to your registered address, email, or mobile number. You agree to inform the Company of any changes within 7 days.'
+    },
+  ];
+
+  additionalConditions.forEach((term) => {
+    checkPageBreak(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text(term.title, margin, yPos);
+    yPos += 6;
+    doc.setFont('helvetica', 'normal');
+    const contentLines = doc.splitTextToSize(term.content, pageWidth - 2 * margin);
+    doc.text(contentLines, margin, yPos);
+    yPos += contentLines.length * 5 + 5;
+  });
+
+  // Acceptance Section
+  yPos += 10;
+  checkPageBreak(60);
+  
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.5);
+  doc.line(margin, yPos, pageWidth - margin, yPos);
+  
+  yPos += 10;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.text('ACCEPTANCE', pageWidth / 2, yPos, { align: 'center' });
+  
+  yPos += 10;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  const acceptanceText = `I, ${user?.fullName || kycName}, hereby confirm that I have read, understood, and agree to abide by all the terms and conditions mentioned in this sanction letter. I request Tata Capital Limited to disburse the sanctioned loan amount to my registered bank account.`;
+  const acceptanceLines = doc.splitTextToSize(acceptanceText, pageWidth - 2 * margin);
+  doc.text(acceptanceLines, margin, yPos);
+  yPos += acceptanceLines.length * 5 + 15;
+
+  // Signature Boxes
+  checkPageBreak(40);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Borrower\'s Signature: _______________', margin, yPos);
+  doc.text('Date: _______________', pageWidth - margin - 60, yPos);
+  
+  yPos += 10;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.text(`Name: ${user?.fullName || kycName}`, margin, yPos);
+  
+  yPos += 25;
+  doc.setFont('helvetica', 'bold');
+  doc.text('For Tata Capital Limited', pageWidth - margin - 60, yPos);
+  yPos += 7;
+  doc.setFont('helvetica', 'normal');
+  doc.text('Authorized Signatory', pageWidth - margin - 60, yPos);
+
+  // Footer on last page
+  yPos = pageHeight - 30;
+  doc.setFontSize(7);
+  doc.setTextColor(100, 100, 100);
+  doc.text('This is a system-generated document and does not require a physical signature from Tata Capital Limited.', pageWidth / 2, yPos, { align: 'center' });
+  yPos += 5;
+  doc.text('For queries, contact our customer care at 1800-209-8282 or email support@tatacapital.com', pageWidth / 2, yPos, { align: 'center' });
+  yPos += 5;
+  doc.text('Tata Capital Limited is a Non-Banking Financial Company (NBFC) registered with RBI', pageWidth / 2, yPos, { align: 'center' });
+
+  // Add page numbers to all pages
+  const pageCount = doc.getNumberOfPages();
+  doc.setFontSize(8);
+  doc.setTextColor(150, 150, 150);
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+  }
+
+  // Save the PDF
+  doc.save(`Tata_Capital_Sanction_Letter_${kycName.replace(/\s/g, '_')}_${Date.now()}.pdf`);
+};
+
+// Helper function to convert number to words (basic implementation)
+const numberToWords = (num: number): string => {
+  const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+  const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+  const teens = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+  
+  if (num === 0) return 'Zero';
+  if (num < 10) return ones[num];
+  if (num < 20) return teens[num - 10];
+  if (num < 100) return tens[Math.floor(num / 10)] + ' ' + ones[num % 10];
+  if (num < 1000) return ones[Math.floor(num / 100)] + ' Hundred ' + numberToWords(num % 100);
+  if (num < 100000) return numberToWords(Math.floor(num / 1000)) + ' Thousand ' + numberToWords(num % 1000);
+  if (num < 10000000) return numberToWords(Math.floor(num / 100000)) + ' Lakh ' + numberToWords(num % 100000);
+  return 'Amount Too Large';
+};
 
   return (
     <>
@@ -275,14 +591,17 @@ export default function LoanAgentPage() {
           </div>
 
           {/* Main Content */}
-          <div className={cn("flex-1 transition-all", sidebarOpen ? "ml-64" : "ml-30")}>
+          <div className={cn(
+            "flex-1 transition-all duration-300",
+            sidebarOpen ? "ml-[300px]" : "ml-[60px]"
+          )}>
             {/* Topbar */}
             <div className="sticky top-0 z-20 h-[9.5vh] bg-gradient-to-r from-black via-neutral-900 to-black px-8 border-b border-neutral-800 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="text-sm font-medium bg-gradient-to-r from-amber-500 to-yellow-500 bg-clip-text text-transparent">
-                  {stage === 'sales' && 'Sales Agent'}
-                  {stage === 'kyc' && 'KYC Verification'}
-                  {stage === 'underwriting' && 'Credit Analysis'}
+                  {stage === 'sales' && '💼 Sales Agent'}
+                  {stage === 'kyc' && '🔐 KYC Verification'}
+                  {stage === 'underwriting' && '📊 Credit Analysis'}
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -290,13 +609,27 @@ export default function LoanAgentPage() {
                   setMessages([]);
                   setStage('sales');
                   setLoanData(null);
-                }} className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg font-medium">
+                }} className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-gray-100 transition-colors">
                   <IconTrashX className="w-4 h-4" />
                   New Chat
                 </button>
                 <div className="flex items-center gap-3 px-4 py-2 bg-neutral-900 rounded-lg border border-neutral-700" onClick={() => triggerRef.current?.querySelector('button')?.click()}>
                   <span className="text-white text-sm">{user?.username || user?.firstName}</span>
-                  <div ref={triggerRef}><UserButton afterSignOutUrl="/" /></div>
+                  <div ref={triggerRef} className="relative">
+                  <UserButton
+                    afterSignOutUrl="/"
+                    appearance={{
+                      elements: {
+                        userButtonPopoverCard: {
+                          transform: 'translateY(3.5vh)',
+                          '@media (max-width: 768px)': {
+                            transform: 'translateY(3.5vh) translateX(4vw)'
+                          }
+                        }
+                      }
+                    }}
+                  />
+                </div>
                 </div>
               </div>
             </div>
@@ -322,8 +655,8 @@ export default function LoanAgentPage() {
                       <div className="bg-neutral-900 border border-neutral-800 rounded-2xl px-6 py-4">
                         <div className="flex gap-2">
                           <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce" />
-                          <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce delay-100" />
-                          <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce delay-200" />
+                          <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                          <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
                         </div>
                       </div>
                     </div>
@@ -339,11 +672,16 @@ export default function LoanAgentPage() {
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                    onKeyDown={(e) => e.key === 'Enter' && !loading && handleSend()}
                     placeholder="Type your message..."
                     className="flex-1 bg-transparent text-white placeholder-neutral-500 outline-none"
+                    disabled={loading}
                   />
-                  <button onClick={handleSend} disabled={loading} className="p-3 bg-gradient-to-r from-amber-600 to-yellow-600 rounded-xl disabled:opacity-50">
+                  <button 
+                    onClick={handleSend} 
+                    disabled={loading || !input.trim()} 
+                    className="p-3 bg-gradient-to-r from-amber-600 to-yellow-600 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:from-amber-700 hover:to-yellow-700 transition-all"
+                  >
                     <IconSend className="w-5 h-5 text-white" />
                   </button>
                 </div>
@@ -354,7 +692,7 @@ export default function LoanAgentPage() {
           {/* KYC Modal */}
           {showKYC && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setShowKYC(false)}>
-              <div className="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>
+              <div className="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-300" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center">
@@ -362,19 +700,49 @@ export default function LoanAgentPage() {
                     </div>
                     <h2 className="text-xl font-bold text-white">KYC Verification</h2>
                   </div>
-                  <button onClick={() => setShowKYC(false)} className="text-neutral-400 hover:text-white">
+                  <button onClick={() => setShowKYC(false)} className="text-neutral-400 hover:text-white transition-colors">
                     <IconX className="w-5 h-5" />
                   </button>
                 </div>
 
                 <div className="space-y-4">
-                  <input type="text" placeholder="Full Name" value={kycName} onChange={(e) => setKycName(e.target.value)} className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:border-blue-500 outline-none" />
-                  <input type="tel" placeholder="Phone Number" value={kycPhone} onChange={(e) => setKycPhone(e.target.value)} className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:border-blue-500 outline-none" />
-                  <input type="text" placeholder="Aadhaar (12 digits)" value={kycAadhaar} onChange={(e) => setKycAadhaar(e.target.value)} maxLength={12} className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:border-blue-500 outline-none" />
-                  <input type="text" placeholder="PAN (10 chars)" value={kycPan} onChange={(e) => setKycPan(e.target.value.toUpperCase())} maxLength={10} className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:border-blue-500 outline-none" />
+                  <input 
+                    type="text" 
+                    placeholder="Full Name" 
+                    value={kycName} 
+                    onChange={(e) => setKycName(e.target.value)} 
+                    className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:border-blue-500 outline-none transition-colors" 
+                  />
+                  <input 
+                    type="tel" 
+                    placeholder="Phone Number" 
+                    value={kycPhone} 
+                    onChange={(e) => setKycPhone(e.target.value)} 
+                    className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:border-blue-500 outline-none transition-colors" 
+                  />
+                  <input 
+                    type="text" 
+                    placeholder="Aadhaar (12 digits)" 
+                    value={kycAadhaar} 
+                    onChange={(e) => setKycAadhaar(e.target.value)} 
+                    maxLength={12} 
+                    className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:border-blue-500 outline-none transition-colors" 
+                  />
+                  <input 
+                    type="text" 
+                    placeholder="PAN (10 chars)" 
+                    value={kycPan} 
+                    onChange={(e) => setKycPan(e.target.value.toUpperCase())} 
+                    maxLength={10} 
+                    className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:border-blue-500 outline-none transition-colors" 
+                  />
                 </div>
 
-                <button onClick={handleKYCSubmit} disabled={!kycName || !kycAadhaar || !kycPan} className="w-full mt-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-lg font-medium disabled:opacity-50 flex items-center justify-center gap-2">
+                <button 
+                  onClick={handleKYCSubmit} 
+                  disabled={!kycName || !kycAadhaar || !kycPan} 
+                  className="w-full mt-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:from-blue-600 hover:to-cyan-700 transition-all flex items-center justify-center gap-2"
+                >
                   <IconCheck className="w-5 h-5" />
                   Submit KYC
                 </button>
@@ -385,7 +753,7 @@ export default function LoanAgentPage() {
           {/* Sanction Modal */}
           {showSanction && loanData && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setShowSanction(false)}>
-              <div className="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-md w-full p-8" onClick={(e) => e.stopPropagation()}>
+              <div className="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-md w-full p-8 animate-in fade-in zoom-in duration-300" onClick={(e) => e.stopPropagation()}>
                 <div className="text-center mb-6">
                   <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
                     <IconCheck className="w-10 h-10 text-white" />
@@ -401,7 +769,10 @@ export default function LoanAgentPage() {
                   <div className="flex justify-between"><span className="text-neutral-400">EMI</span><span className="font-bold">₹{loanData.emi.toLocaleString()}</span></div>
                 </div>
 
-                <button onClick={generatePDF} className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold flex items-center justify-center gap-3">
+                <button 
+                  onClick={generatePDF} 
+                  className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold flex items-center justify-center gap-3 hover:from-green-600 hover:to-emerald-700 transition-all"
+                >
                   <IconDownload className="w-6 h-6" />
                   Download Sanction Letter
                 </button>
