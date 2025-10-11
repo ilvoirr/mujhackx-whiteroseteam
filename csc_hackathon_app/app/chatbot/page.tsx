@@ -17,7 +17,10 @@ import {
   IconX,
   IconCheck,
   IconDownload,
-  IconAlertCircle
+  IconAlertCircle,
+  IconHistory,
+  IconFileText,
+  IconRefresh
 } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from 'next/navigation';
@@ -36,6 +39,21 @@ type LoanData = {
   rate: number;
   emi: number;
   purpose: string;
+};
+
+type SanctionedLoan = {
+  id: string;
+  customerName: string;
+  amount: number;
+  tenure: number;
+  rate: number;
+  emi: number;
+  purpose: string;
+  sanctionDate: string;
+  pan: string;
+  phone: string;
+  crmVerified: boolean;
+  creditScore?: number;
 };
 
 // DUMMY CRM DATABASE
@@ -91,6 +109,7 @@ export default function LoanAgentPage() {
   const [kycPhone, setKycPhone] = useState('');
   const [kycAadhaar, setKycAadhaar] = useState('');
   const [kycPan, setKycPan] = useState('');
+  const [kycCompleted, setKycCompleted] = useState(false);
   
   // Sanction Modal
   const [showSanction, setShowSanction] = useState(false);
@@ -98,6 +117,11 @@ export default function LoanAgentPage() {
   // CRM Verification State
   const [crmVerified, setCrmVerified] = useState(false);
   const [customerData, setCustomerData] = useState<typeof CRM_DATABASE[0] | null>(null);
+
+  // Loans History State
+  const [sanctionedLoans, setSanctionedLoans] = useState<SanctionedLoan[]>([]);
+  const [showLoansHistory, setShowLoansHistory] = useState(false);
+  const [selectedLoan, setSelectedLoan] = useState<SanctionedLoan | null>(null);
 
   const links = [
     { label: "Balance Sheet", href: "/apppage", icon: <IconReceipt className="h-7 w-7 text-white" />, onClick: () => router.push('/apppage') },
@@ -107,6 +131,16 @@ export default function LoanAgentPage() {
     { label: "Financial Reads", href: "/financial-reads", icon: <IconBook className="h-7 w-7 text-white" />, onClick: () => router.push('/financial-reads') },
     { label: "Stock Market", href: "/investment", icon: <IconTrendingUp className="h-7 w-7 text-white" />, onClick: () => router.push('/investment') },
   ];
+
+  // Load sanctioned loans from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedLoans = localStorage.getItem('sanctionedLoans');
+      if (storedLoans) {
+        setSanctionedLoans(JSON.parse(storedLoans));
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -161,6 +195,42 @@ export default function LoanAgentPage() {
     return customer || null;
   };
 
+  // Save sanctioned loan to localStorage
+  const saveSanctionedLoan = (loan: SanctionedLoan) => {
+    const updatedLoans = [...sanctionedLoans, loan];
+    setSanctionedLoans(updatedLoans);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sanctionedLoans', JSON.stringify(updatedLoans));
+    }
+  };
+
+  // Recovery mechanism - reopen KYC if needed
+  const reopenKYC = () => {
+    setShowKYC(true);
+    setMessages(prev => [...prev, {
+      id: Date.now(),
+      text: "No problem! I've reopened the KYC verification form for you. Please complete it when you're ready.",
+      sender: 'agent',
+      agent: 'Verification Agent'
+    }]);
+  };
+
+  // Full reset function
+  const fullReset = () => {
+    setMessages([]);
+    setStage('sales');
+    setLoanData(null);
+    setCrmVerified(false);
+    setCustomerData(null);
+    setKycName('');
+    setKycPhone('');
+    setKycAadhaar('');
+    setKycPan('');
+    setShowKYC(false);
+    setShowSanction(false);
+    setKycCompleted(false);
+  };
+
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -172,6 +242,29 @@ export default function LoanAgentPage() {
 
     try {
       const { amount, tenure, purpose } = extractLoan(userInput);
+      
+      // Check if user is asking for a new loan after completing one
+      if (amount > 0 && kycCompleted) {
+        // Reset for new loan application
+        const rate = 10.5;
+        const emi = calculateEMI(amount, rate, tenure);
+        setLoanData({ amount, tenure, rate, emi, purpose });
+        setStage('sales');
+        setKycCompleted(false);
+        setCrmVerified(false);
+        setCustomerData(null);
+
+        setTimeout(() => {
+          setMessages(prev => [...prev, {
+            id: Date.now(),
+            text: `Great! I can help you with another loan. Here's the proposal:\n\nLoan Amount: ₹${amount.toLocaleString()}\nTenure: ${tenure} months (${tenure/12} years)\nInterest Rate: ${rate}% per annum\nMonthly EMI: ₹${emi.toLocaleString()}\nPurpose: ${purpose}\n\nWould you like to proceed with this application?`,
+            sender: 'agent',
+            agent: 'Sales Agent'
+          }]);
+          setLoading(false);
+        }, 1000);
+        return;
+      }
       
       if (stage === 'sales' && amount > 0) {
         const rate = 10.5;
@@ -225,7 +318,7 @@ export default function LoanAgentPage() {
           id: Date.now(),
           text: data.message || "I am here to assist you with your loan requirements. What would you like to know?",
           sender: 'agent',
-          agent: stage === 'sales' ? 'Sales Agent' : 'Verification Agent'
+          agent: stage === 'sales' ? 'Sales Agent' : stage === 'kyc' ? 'Verification Agent' : 'Underwriting Agent'
         }]);
       }
       
@@ -244,6 +337,7 @@ export default function LoanAgentPage() {
   const handleKYCSubmit = () => {
     setShowKYC(false);
     setStage('underwriting');
+    setKycCompleted(true);
     
     setMessages(prev => [...prev, {
       id: Date.now(),
@@ -300,9 +394,28 @@ export default function LoanAgentPage() {
         }]);
         
         setTimeout(() => {
+          // Save loan BEFORE showing sanction modal
+          if (loanData) {
+            const newLoan: SanctionedLoan = {
+              id: `TC${Date.now()}`,
+              customerName: user?.fullName || kycName,
+              amount: loanData.amount,
+              tenure: loanData.tenure,
+              rate: loanData.rate,
+              emi: loanData.emi,
+              purpose: loanData.purpose,
+              sanctionDate: new Date().toISOString(),
+              pan: kycPan,
+              phone: kycPhone,
+              crmVerified: crmVerified,
+              creditScore: customerData?.creditScore
+            };
+            saveSanctionedLoan(newLoan);
+          }
+
           setMessages(prev => [...prev, {
             id: Date.now(),
-            text: `Congratulations, ${kycName}!\n\nYour loan has been approved with the following terms:\n\nApproved Amount: ₹${loanData?.amount.toLocaleString()}\nTenure: ${loanData?.tenure} months\nInterest Rate: ${loanData?.rate}% per annum\nMonthly EMI: ₹${loanData?.emi.toLocaleString()}\n\nGenerating your official sanction letter now.`,
+            text: `Congratulations, ${kycName}!\n\nYour loan has been approved with the following terms:\n\nApproved Amount: ₹${loanData?.amount.toLocaleString()}\nTenure: ${loanData?.tenure} months\nInterest Rate: ${loanData?.rate}% per annum\nMonthly EMI: ₹${loanData?.emi.toLocaleString()}\n\nGenerating your official sanction letter now. You can download it anytime from the Loans History.`,
             sender: 'agent',
             agent: 'Underwriting Agent'
           }]);
@@ -327,7 +440,11 @@ export default function LoanAgentPage() {
     }, 5500);
   };
 
-  const generatePDF = () => {
+  const generatePDF = (loanToDownload?: SanctionedLoan) => {
+    const loan = loanToDownload || sanctionedLoans[sanctionedLoans.length - 1];
+
+    if (!loan) return;
+
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.width;
     const pageHeight = doc.internal.pageSize.height;
@@ -372,26 +489,26 @@ export default function LoanAgentPage() {
     
     yPos += 10;
     doc.setFontSize(9);
-    doc.text(`Ref No: TC/SL/${Date.now().toString().slice(-8)}`, margin, yPos);
-    doc.text(`Date: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`, pageWidth - margin - 40, yPos);
+    doc.text(`Ref No: ${loan.id}`, margin, yPos);
+    doc.text(`Date: ${new Date(loan.sanctionDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`, pageWidth - margin - 40, yPos);
     
     yPos += 15;
     doc.setFont('helvetica', 'normal');
     doc.text('To,', margin, yPos);
     yPos += 7;
     doc.setFont('helvetica', 'bold');
-    doc.text(user?.fullName || kycName, margin, yPos);
+    doc.text(loan.customerName, margin, yPos);
     yPos += 7;
     doc.setFont('helvetica', 'normal');
-    doc.text(`PAN: ${kycPan}`, margin, yPos);
+    doc.text(`PAN: ${loan.pan}`, margin, yPos);
     yPos += 7;
-    doc.text(`Aadhaar: XXXX-XXXX-${kycAadhaar.slice(-4)}`, margin, yPos);
+    doc.text(`Phone: ${loan.phone}`, margin, yPos);
     
-    if (crmVerified && customerData) {
+    if (loan.crmVerified && loan.creditScore) {
       yPos += 7;
       doc.setFont('helvetica', 'italic');
       doc.setTextColor(0, 128, 0);
-      doc.text(`[CRM Verified Customer | Credit Score: ${customerData.creditScore} | Risk: ${customerData.riskProfile}]`, margin, yPos);
+      doc.text(`[CRM Verified Customer | Credit Score: ${loan.creditScore}]`, margin, yPos);
       doc.setTextColor(0, 0, 0);
     }
     
@@ -403,10 +520,10 @@ export default function LoanAgentPage() {
     yPos += 12;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text(`Dear ${user?.firstName || kycName.split(' ')[0]},`, margin, yPos);
+    doc.text(`Dear ${loan.customerName.split(' ')[0]},`, margin, yPos);
     
     yPos += 10;
-    const openingText = `We are pleased to inform you that Tata Capital Limited ("the Company") has sanctioned a ${loanData?.purpose} in your favor, subject to the terms and conditions mentioned herein and as per your loan application dated ${new Date().toLocaleDateString('en-IN')}.`;
+    const openingText = `We are pleased to inform you that Tata Capital Limited ("the Company") has sanctioned a ${loan.purpose} in your favor, subject to the terms and conditions mentioned herein and as per your loan application dated ${new Date(loan.sanctionDate).toLocaleDateString('en-IN')}.`;
     
     const splitOpening = doc.splitTextToSize(openingText, pageWidth - 2 * margin);
     doc.text(splitOpening, margin, yPos);
@@ -428,12 +545,12 @@ export default function LoanAgentPage() {
     doc.setFont('helvetica', 'normal');
     
     const loanDetails = [
-      ['Loan Amount Sanctioned:', `Rs. ${loanData?.amount.toLocaleString('en-IN')} (Rupees ${numberToWords(loanData?.amount || 0)} Only)`],
-      ['Purpose of Loan:', loanData?.purpose || 'Personal'],
-      ['Rate of Interest:', `${loanData?.rate}% per annum (Fixed)`],
-      ['Loan Tenure:', `${loanData?.tenure} months (${Math.floor((loanData?.tenure || 0) / 12)} years ${(loanData?.tenure || 0) % 12} months)`],
-      ['EMI Amount:', `Rs. ${loanData?.emi.toLocaleString('en-IN')} per month`],
-      ['Processing Fee:', `Rs. ${Math.round((loanData?.amount || 0) * 0.02).toLocaleString('en-IN')} (2% of loan amount + GST)`],
+      ['Loan Amount Sanctioned:', `Rs. ${loan.amount.toLocaleString('en-IN')} (Rupees ${numberToWords(loan.amount)} Only)`],
+      ['Purpose of Loan:', loan.purpose],
+      ['Rate of Interest:', `${loan.rate}% per annum (Fixed)`],
+      ['Loan Tenure:', `${loan.tenure} months (${Math.floor(loan.tenure / 12)} years ${loan.tenure % 12} months)`],
+      ['EMI Amount:', `Rs. ${loan.emi.toLocaleString('en-IN')} per month`],
+      ['Processing Fee:', `Rs. ${Math.round(loan.amount * 0.02).toLocaleString('en-IN')} (2% of loan amount + GST)`],
     ];
     
     loanDetails.forEach(([label, value]) => {
@@ -446,7 +563,7 @@ export default function LoanAgentPage() {
     });
 
     yPos += 5;
-    const totalAmount = (loanData?.emi || 0) * (loanData?.tenure || 0);
+    const totalAmount = loan.emi * loan.tenure;
     doc.setFont('helvetica', 'bold');
     doc.text('Total Amount Payable:', margin + 5, yPos);
     doc.text(`Rs. ${totalAmount.toLocaleString('en-IN')}`, margin + 65, yPos);
@@ -454,7 +571,7 @@ export default function LoanAgentPage() {
     yPos += 15;
     doc.setFontSize(9);
     doc.setFont('helvetica', 'italic');
-    const validityDate = new Date();
+    const validityDate = new Date(loan.sanctionDate);
     validityDate.setDate(validityDate.getDate() + 30);
     doc.text(`Note: This sanction is valid until ${validityDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`, margin, yPos);
 
@@ -476,11 +593,11 @@ export default function LoanAgentPage() {
       },
       {
         title: '2. Repayment',
-        content: `The loan shall be repayable in ${loanData?.tenure} Equated Monthly Installments (EMIs) of Rs. ${loanData?.emi.toLocaleString('en-IN')} each. The first EMI shall be due on the 5th day of the month following the date of disbursement. EMIs shall be recovered through Electronic Clearing Service (ECS) / NACH from your designated bank account.`
+        content: `The loan shall be repayable in ${loan.tenure} Equated Monthly Installments (EMIs) of Rs. ${loan.emi.toLocaleString('en-IN')} each. The first EMI shall be due on the 5th day of the month following the date of disbursement. EMIs shall be recovered through Electronic Clearing Service (ECS) / NACH from your designated bank account.`
       },
       {
         title: '3. Interest Calculation',
-        content: `Interest shall be calculated on a daily reducing balance basis at the rate of ${loanData?.rate}% per annum. In case of any change in RBI guidelines or market conditions, the Company reserves the right to revise the interest rate after giving you prior notice.`
+        content: `Interest shall be calculated on a daily reducing balance basis at the rate of ${loan.rate}% per annum. In case of any change in RBI guidelines or market conditions, the Company reserves the right to revise the interest rate after giving you prior notice.`
       },
       {
         title: '4. Prepayment and Foreclosure',
@@ -571,7 +688,7 @@ export default function LoanAgentPage() {
     yPos += 10;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
-    const acceptanceText = `I, ${user?.fullName || kycName}, hereby confirm that I have read, understood, and agree to abide by all the terms and conditions mentioned in this sanction letter. I request Tata Capital Limited to disburse the sanctioned loan amount to my registered bank account.`;
+    const acceptanceText = `I, ${loan.customerName}, hereby confirm that I have read, understood, and agree to abide by all the terms and conditions mentioned in this sanction letter. I request Tata Capital Limited to disburse the sanctioned loan amount to my registered bank account.`;
     const acceptanceLines = doc.splitTextToSize(acceptanceText, pageWidth - 2 * margin);
     doc.text(acceptanceLines, margin, yPos);
     yPos += acceptanceLines.length * 5 + 15;
@@ -584,7 +701,7 @@ export default function LoanAgentPage() {
     yPos += 10;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
-    doc.text(`Name: ${user?.fullName || kycName}`, margin, yPos);
+    doc.text(`Name: ${loan.customerName}`, margin, yPos);
     
     yPos += 25;
     doc.setFont('helvetica', 'bold');
@@ -610,7 +727,7 @@ export default function LoanAgentPage() {
       doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
     }
 
-    doc.save(`Tata_Capital_Sanction_Letter_${kycName.replace(/\s/g, '_')}_${Date.now()}.pdf`);
+    doc.save(`Tata_Capital_Sanction_Letter_${loan.customerName.replace(/\s/g, '_')}_${Date.now()}.pdf`);
   };
 
   const numberToWords = (num: number): string => {
@@ -671,13 +788,21 @@ export default function LoanAgentPage() {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <button onClick={() => {
-                  setMessages([]);
-                  setStage('sales');
-                  setLoanData(null);
-                  setCrmVerified(false);
-                  setCustomerData(null);
-                }} className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-gray-100 transition-colors">
+                {/* Recovery Button - Only show when in KYC stage, KYC not completed, and modal is closed */}
+                {stage === 'kyc' && !kycCompleted && !showKYC && loanData && (
+                  <button onClick={reopenKYC} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-yellow-600 text-white rounded-lg font-medium hover:from-amber-700 hover:to-yellow-700 transition-colors">
+                    <IconRefresh className="w-4 h-4" />
+                    Reopen KYC
+                  </button>
+                )}
+                
+                {/* Loans History Button - Golden Theme */}
+                <button onClick={() => setShowLoansHistory(true)} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-yellow-600 text-white rounded-lg font-medium hover:from-amber-700 hover:to-yellow-700 transition-colors">
+                  <IconHistory className="w-4 h-4" />
+                  Loans History ({sanctionedLoans.length})
+                </button>
+                
+                <button onClick={fullReset} className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-gray-100 transition-colors">
                   <IconTrashX className="w-4 h-4" />
                   New Chat
                 </button>
@@ -755,6 +880,151 @@ export default function LoanAgentPage() {
             </div>
           </div>
 
+          {/* Loans History Sidebar - Golden Theme */}
+          {showLoansHistory && (
+            <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm" onClick={() => setShowLoansHistory(false)}>
+              <div className="w-full max-w-md bg-neutral-900 border-l border-neutral-800 overflow-y-auto animate-in slide-in-from-right duration-300" onClick={(e) => e.stopPropagation()}>
+                <div className="sticky top-0 z-10 bg-gradient-to-r from-amber-600 to-yellow-600 p-6 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <IconHistory className="w-6 h-6 text-white" />
+                    <h2 className="text-xl font-bold text-white">Sanctioned Loans</h2>
+                  </div>
+                  <button onClick={() => setShowLoansHistory(false)} className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors">
+                    <IconX className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="p-6 space-y-4">
+                  {sanctionedLoans.length === 0 ? (
+                    <div className="text-center py-12">
+                      <IconFileText className="w-16 h-16 text-neutral-600 mx-auto mb-4" />
+                      <p className="text-neutral-400">No sanctioned loans yet</p>
+                      <p className="text-sm text-neutral-500 mt-2">Complete a loan application to see it here</p>
+                    </div>
+                  ) : (
+                    sanctionedLoans.map((loan) => (
+                      <div key={loan.id} className="bg-neutral-800 rounded-xl p-5 border border-neutral-700 hover:border-amber-500 transition-all cursor-pointer" onClick={() => setSelectedLoan(loan)}>
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <h3 className="font-bold text-white text-lg">{loan.customerName}</h3>
+                            <p className="text-xs text-neutral-400">{new Date(loan.sanctionDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+                          </div>
+                          {loan.crmVerified && (
+                            <div className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                              <IconCheck className="w-3 h-3" />
+                              CRM Verified
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="space-y-2 mb-4">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-neutral-400">Loan Amount</span>
+                            <span className="font-semibold text-white">₹{loan.amount.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-neutral-400">EMI</span>
+                            <span className="font-semibold text-white">₹{loan.emi.toLocaleString()}/mo</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-neutral-400">Purpose</span>
+                            <span className="font-semibold text-white">{loan.purpose}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-neutral-400">Tenure</span>
+                            <span className="font-semibold text-white">{loan.tenure} months</span>
+                          </div>
+                        </div>
+
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            generatePDF(loan);
+                          }}
+                          className="w-full py-2 bg-gradient-to-r from-amber-600 to-yellow-600 text-white rounded-lg text-sm font-medium flex items-center justify-center gap-2 hover:from-amber-700 hover:to-yellow-700 transition-all"
+                        >
+                          <IconDownload className="w-4 h-4" />
+                          Download Sanction Letter
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Loan Details Modal - Golden Theme */}
+          {selectedLoan && (
+            <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setSelectedLoan(null)}>
+              <div className="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-lg w-full p-8 animate-in fade-in zoom-in duration-300" onClick={(e) => e.stopPropagation()}>
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-white">Loan Details</h3>
+                  <button onClick={() => setSelectedLoan(null)} className="text-neutral-400 hover:text-white transition-colors">
+                    <IconX className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="space-y-4 mb-6">
+                  <div className="flex justify-between py-3 border-b border-neutral-800">
+                    <span className="text-neutral-400">Customer Name</span>
+                    <span className="font-semibold text-white">{selectedLoan.customerName}</span>
+                  </div>
+                  <div className="flex justify-between py-3 border-b border-neutral-800">
+                    <span className="text-neutral-400">Loan ID</span>
+                    <span className="font-mono text-sm text-white">{selectedLoan.id}</span>
+                  </div>
+                  <div className="flex justify-between py-3 border-b border-neutral-800">
+                    <span className="text-neutral-400">Sanction Date</span>
+                    <span className="text-white">{new Date(selectedLoan.sanctionDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                  </div>
+                  <div className="flex justify-between py-3 border-b border-neutral-800">
+                    <span className="text-neutral-400">Loan Amount</span>
+                    <span className="font-bold text-xl text-white">₹{selectedLoan.amount.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between py-3 border-b border-neutral-800">
+                    <span className="text-neutral-400">Interest Rate</span>
+                    <span className="text-white">{selectedLoan.rate}% p.a.</span>
+                  </div>
+                  <div className="flex justify-between py-3 border-b border-neutral-800">
+                    <span className="text-neutral-400">Tenure</span>
+                    <span className="text-white">{selectedLoan.tenure} months ({Math.floor(selectedLoan.tenure / 12)} years)</span>
+                  </div>
+                  <div className="flex justify-between py-3 border-b border-neutral-800">
+                    <span className="text-neutral-400">Monthly EMI</span>
+                    <span className="font-bold text-white">₹{selectedLoan.emi.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between py-3 border-b border-neutral-800">
+                    <span className="text-neutral-400">Purpose</span>
+                    <span className="text-white">{selectedLoan.purpose}</span>
+                  </div>
+                  <div className="flex justify-between py-3 border-b border-neutral-800">
+                    <span className="text-neutral-400">PAN</span>
+                    <span className="font-mono text-sm text-white">{selectedLoan.pan}</span>
+                  </div>
+                  <div className="flex justify-between py-3 border-b border-neutral-800">
+                    <span className="text-neutral-400">Phone</span>
+                    <span className="text-white">{selectedLoan.phone}</span>
+                  </div>
+                  {selectedLoan.crmVerified && (
+                    <div className="flex justify-between py-3 border-b border-neutral-800">
+                      <span className="text-neutral-400">Credit Score</span>
+                      <span className="font-bold text-green-400">{selectedLoan.creditScore}</span>
+                    </div>
+                  )}
+                </div>
+
+                <button 
+                  onClick={() => generatePDF(selectedLoan)}
+                  className="w-full py-4 bg-gradient-to-r from-amber-600 to-yellow-600 text-white rounded-xl font-bold flex items-center justify-center gap-3 hover:from-amber-700 hover:to-yellow-700 transition-all"
+                >
+                  <IconDownload className="w-6 h-6" />
+                  Download Sanction Letter
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* KYC Modal */}
           {showKYC && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setShowKYC(false)}>
@@ -816,7 +1086,7 @@ export default function LoanAgentPage() {
 
                 <button 
                   onClick={handleKYCSubmit} 
-                  disabled={!kycName || !kycAadhaar || !kycPan} 
+                  disabled={!kycName || !kycAadhaar || !kycPan || !kycPhone} 
                   className="w-full mt-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:from-blue-600 hover:to-cyan-700 transition-all flex items-center justify-center gap-2"
                 >
                   <IconCheck className="w-5 h-5" />
@@ -827,7 +1097,7 @@ export default function LoanAgentPage() {
           )}
 
           {/* Sanction Modal */}
-          {showSanction && loanData && (
+          {showSanction && sanctionedLoans.length > 0 && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setShowSanction(false)}>
               <div className="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-md w-full p-8 animate-in fade-in zoom-in duration-300" onClick={(e) => e.stopPropagation()}>
                 <div className="text-center mb-6">
@@ -842,14 +1112,14 @@ export default function LoanAgentPage() {
                 </div>
 
                 <div className="bg-neutral-800/50 rounded-xl p-6 mb-6 space-y-3 text-white">
-                  <div className="flex justify-between"><span className="text-neutral-400">Amount</span><span className="font-bold">Rs. {loanData.amount.toLocaleString()}</span></div>
-                  <div className="flex justify-between"><span className="text-neutral-400">Tenure</span><span className="font-bold">{loanData.tenure} months</span></div>
-                  <div className="flex justify-between"><span className="text-neutral-400">Rate</span><span className="font-bold">{loanData.rate}% p.a.</span></div>
-                  <div className="flex justify-between"><span className="text-neutral-400">EMI</span><span className="font-bold">Rs. {loanData.emi.toLocaleString()}</span></div>
+                  <div className="flex justify-between"><span className="text-neutral-400">Amount</span><span className="font-bold">Rs. {sanctionedLoans[sanctionedLoans.length - 1].amount.toLocaleString()}</span></div>
+                  <div className="flex justify-between"><span className="text-neutral-400">Tenure</span><span className="font-bold">{sanctionedLoans[sanctionedLoans.length - 1].tenure} months</span></div>
+                  <div className="flex justify-between"><span className="text-neutral-400">Rate</span><span className="font-bold">{sanctionedLoans[sanctionedLoans.length - 1].rate}% p.a.</span></div>
+                  <div className="flex justify-between"><span className="text-neutral-400">EMI</span><span className="font-bold">Rs. {sanctionedLoans[sanctionedLoans.length - 1].emi.toLocaleString()}</span></div>
                 </div>
 
                 <button 
-                  onClick={generatePDF} 
+                  onClick={() => generatePDF()} 
                   className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold flex items-center justify-center gap-3 hover:from-green-600 hover:to-emerald-700 transition-all"
                 >
                   <IconDownload className="w-6 h-6" />
