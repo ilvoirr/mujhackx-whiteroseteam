@@ -112,9 +112,9 @@ export default function LoanAgentPage() {
     if (messages.length === 0) {
       setMessages([{
         id: Date.now(),
-        text: `Hi there! I'm Raj from Tata Capital. ${user?.firstName ? `Nice to meet you, ${user.firstName}!` : 'Great to connect with you!'} How can I help you with your financial goals today?`,
+        text: `Hello! I'm Raj from Tata Capital. ${user?.firstName ? `Nice to meet you, ${user.firstName}.` : 'Great to connect with you.'} How can I assist you with your financial goals today?`,
         sender: 'agent',
-        agent: '💼 Sales Agent'
+        agent: 'Sales Agent'
       }]);
     }
   }, []);
@@ -150,7 +150,6 @@ export default function LoanAgentPage() {
 
   // CRM Verification Function
   const verifyCRMData = (name: string, phone: string, aadhaar: string, pan: string) => {
-    // Simulate CRM database lookup
     const customer = CRM_DATABASE.find(
       (record) =>
         record.name.toLowerCase() === name.toLowerCase() &&
@@ -182,9 +181,9 @@ export default function LoanAgentPage() {
         setTimeout(() => {
           setMessages(prev => [...prev, {
             id: Date.now(),
-            text: `Perfect! Let me prepare that for you:\n\n💰 Loan Amount: ₹${amount.toLocaleString()}\n📅 Tenure: ${tenure} months (${tenure/12} years)\n📊 Interest Rate: ${rate}% p.a.\n💳 Monthly EMI: ₹${emi.toLocaleString()}\n🎯 Purpose: ${purpose}\n\nThis looks good! Would you like to proceed with the application? I'll need to collect some documents for KYC verification.`,
+            text: `Excellent. Let me prepare that proposal for you:\n\nLoan Amount: ₹${amount.toLocaleString()}\nTenure: ${tenure} months (${tenure/12} years)\nInterest Rate: ${rate}% per annum\nMonthly EMI: ₹${emi.toLocaleString()}\nPurpose: ${purpose}\n\nThese terms look favorable for your requirements. Would you like to proceed with the application? I will need to collect some documents for KYC verification.`,
             sender: 'agent',
-            agent: '💼 Sales Agent'
+            agent: 'Sales Agent'
           }]);
           setLoading(false);
         }, 1000);
@@ -209,24 +208,24 @@ export default function LoanAgentPage() {
           id: Date.now(),
           text: data.message,
           sender: 'agent',
-          agent: '💼 Sales Agent'
+          agent: 'Sales Agent'
         }]);
         
         setTimeout(() => {
           setMessages(prev => [...prev, {
             id: Date.now(),
-            text: "Excellent! Let me get your KYC verification started. I'm opening the secure form now...",
+            text: "Perfect. Let me initiate your KYC verification process. I am opening the secure verification form now.",
             sender: 'agent',
-            agent: '🔐 Verification Agent'
+            agent: 'Verification Agent'
           }]);
           setTimeout(() => setShowKYC(true), 800);
         }, 1500);
       } else {
         setMessages(prev => [...prev, {
           id: Date.now(),
-          text: data.message || "I'm here to help you with your loan needs. What would you like to know?",
+          text: data.message || "I am here to assist you with your loan requirements. What would you like to know?",
           sender: 'agent',
-          agent: stage === 'sales' ? '💼 Sales Agent' : '🔐 Verification Agent'
+          agent: stage === 'sales' ? 'Sales Agent' : 'Verification Agent'
         }]);
       }
       
@@ -234,9 +233,9 @@ export default function LoanAgentPage() {
     } catch (err) {
       setMessages(prev => [...prev, {
         id: Date.now(),
-        text: "I apologize for the technical issue. Let me try to help you - could you tell me what loan you're interested in?",
+        text: "I apologize for the technical issue. Please let me assist you - could you tell me what loan you are interested in?",
         sender: 'agent',
-        agent: '💼 Sales Agent'
+        agent: 'Sales Agent'
       }]);
       setLoading(false);
     }
@@ -246,21 +245,20 @@ export default function LoanAgentPage() {
     setShowKYC(false);
     setStage('underwriting');
     
-    // Add initial message
     setMessages(prev => [...prev, {
       id: Date.now(),
-      text: `Thank you ${kycName}! Initiating KYC verification process...`,
+      text: `Thank you, ${kycName}. Initiating KYC verification process.`,
       sender: 'agent',
-      agent: '🔐 Verification Agent'
+      agent: 'Verification Agent'
     }]);
 
     // Step 1: Document Verification
     setTimeout(() => {
       setMessages(prev => [...prev, {
         id: Date.now(),
-        text: "📄 Step 1/3: Verifying submitted documents...\n✓ PAN Card validated\n✓ Aadhaar Card validated\n✓ Phone number verified",
+        text: "Step 1 of 3: Verifying submitted documents.\n\nPAN Card: Validated\nAadhaar Card: Validated\nPhone Number: Verified",
         sender: 'agent',
-        agent: '🔐 Verification Agent'
+        agent: 'Verification Agent'
       }]);
     }, 1000);
 
@@ -274,16 +272,16 @@ export default function LoanAgentPage() {
         
         setMessages(prev => [...prev, {
           id: Date.now(),
-          text: `🗄️ Step 2/3: CRM Database Verification\n\n✅ Customer found in CRM system!\n\n📊 Profile Details:\n• Name: ${verifiedCustomer.name}\n• Customer Type: ${verifiedCustomer.existingCustomer ? 'Existing Customer' : 'New Customer'}\n• Credit Score: ${verifiedCustomer.creditScore}\n• Risk Profile: ${verifiedCustomer.riskProfile}\n\nProceeding to credit analysis...`,
+          text: `Step 2 of 3: CRM Database Verification\n\nStatus: Customer Found\n\nProfile Details:\nName: ${verifiedCustomer.name}\nCustomer Type: ${verifiedCustomer.existingCustomer ? 'Existing Customer' : 'New Customer'}\nCredit Score: ${verifiedCustomer.creditScore}\nRisk Profile: ${verifiedCustomer.riskProfile}\n\nProceeding to credit analysis.`,
           sender: 'agent',
-          agent: '🔐 Verification Agent'
+          agent: 'Verification Agent'
         }]);
       } else {
         setMessages(prev => [...prev, {
           id: Date.now(),
-          text: "🗄️ Step 2/3: CRM Database Verification\n\n⚠️ Customer not found in existing CRM database.\n\nInitiating new customer onboarding and external credit bureau check...",
+          text: "Step 2 of 3: CRM Database Verification\n\nStatus: Customer not found in existing CRM database.\n\nInitiating new customer onboarding and external credit bureau verification.",
           sender: 'agent',
-          agent: '🔐 Verification Agent'
+          agent: 'Verification Agent'
         }]);
       }
     }, 3000);
@@ -296,36 +294,34 @@ export default function LoanAgentPage() {
       if (verifiedCustomer && basicValidation) {
         setMessages(prev => [...prev, {
           id: Date.now(),
-          text: `📊 Step 3/3: Credit Analysis & Underwriting\n\n✅ CIBIL Score: ${verifiedCustomer.creditScore}\n✅ Risk Assessment: ${verifiedCustomer.riskProfile} Risk\n✅ Debt-to-Income Ratio: Healthy\n✅ Payment History: Excellent\n\n🎉 ALL CHECKS PASSED!\n\nYour loan application has been APPROVED!`,
+          text: `Step 3 of 3: Credit Analysis and Underwriting\n\nCIBIL Score: ${verifiedCustomer.creditScore}\nRisk Assessment: ${verifiedCustomer.riskProfile} Risk\nDebt-to-Income Ratio: Healthy\nPayment History: Excellent\n\nAll verification checks have been successfully completed.\n\nYour loan application has been APPROVED.`,
           sender: 'agent',
-          agent: '📊 Underwriting Agent'
+          agent: 'Underwriting Agent'
         }]);
         
         setTimeout(() => {
           setMessages(prev => [...prev, {
             id: Date.now(),
-            text: `🎊 Congratulations ${kycName}!\n\nYour loan has been APPROVED with the following terms:\n\n✓ Amount: ₹${loanData?.amount.toLocaleString()}\n✓ Tenure: ${loanData?.tenure} months\n✓ Rate: ${loanData?.rate}% p.a.\n✓ Monthly EMI: ₹${loanData?.emi.toLocaleString()}\n\nGenerating your official sanction letter...`,
+            text: `Congratulations, ${kycName}!\n\nYour loan has been approved with the following terms:\n\nApproved Amount: ₹${loanData?.amount.toLocaleString()}\nTenure: ${loanData?.tenure} months\nInterest Rate: ${loanData?.rate}% per annum\nMonthly EMI: ₹${loanData?.emi.toLocaleString()}\n\nGenerating your official sanction letter now.`,
             sender: 'agent',
-            agent: '📊 Underwriting Agent'
+            agent: 'Underwriting Agent'
           }]);
           setTimeout(() => setShowSanction(true), 1500);
         }, 2000);
         
       } else if (basicValidation && !verifiedCustomer) {
-        // New customer - requires manual review
         setMessages(prev => [...prev, {
           id: Date.now(),
-          text: "📊 Step 3/3: Credit Analysis & Underwriting\n\n⏳ As a new customer, your application requires additional verification by our senior underwriting team.\n\n📞 Our team will contact you within 24-48 hours with the next steps.\n\nThank you for choosing Tata Capital!",
+          text: "Step 3 of 3: Credit Analysis and Underwriting\n\nAs a new customer, your application requires additional verification by our senior underwriting team.\n\nOur team will contact you within 24-48 hours with the next steps.\n\nThank you for choosing Tata Capital.",
           sender: 'agent',
-          agent: '📊 Underwriting Agent'
+          agent: 'Underwriting Agent'
         }]);
       } else {
-        // Validation failed
         setMessages(prev => [...prev, {
           id: Date.now(),
-          text: "📊 Step 3/3: Credit Analysis & Underwriting\n\n❌ Document validation failed. Please ensure all details are correct.\n\nKindly contact our customer support at 1800-209-8282 for assistance.",
+          text: "Step 3 of 3: Credit Analysis and Underwriting\n\nDocument validation has failed. Please ensure all details are correct.\n\nKindly contact our customer support at 1800-209-8282 for assistance.",
           sender: 'agent',
-          agent: '📊 Underwriting Agent'
+          agent: 'Underwriting Agent'
         }]);
       }
     }, 5500);
@@ -391,12 +387,11 @@ export default function LoanAgentPage() {
     yPos += 7;
     doc.text(`Aadhaar: XXXX-XXXX-${kycAadhaar.slice(-4)}`, margin, yPos);
     
-    // Add CRM verification note if verified
     if (crmVerified && customerData) {
       yPos += 7;
       doc.setFont('helvetica', 'italic');
       doc.setTextColor(0, 128, 0);
-      doc.text(`✓ CRM Verified Customer | Credit Score: ${customerData.creditScore} | Risk: ${customerData.riskProfile}`, margin, yPos);
+      doc.text(`[CRM Verified Customer | Credit Score: ${customerData.creditScore} | Risk: ${customerData.riskProfile}]`, margin, yPos);
       doc.setTextColor(0, 0, 0);
     }
     
@@ -433,12 +428,12 @@ export default function LoanAgentPage() {
     doc.setFont('helvetica', 'normal');
     
     const loanDetails = [
-      ['Loan Amount Sanctioned:', `₹${loanData?.amount.toLocaleString('en-IN')} (Rupees ${numberToWords(loanData?.amount || 0)} Only)`],
+      ['Loan Amount Sanctioned:', `Rs. ${loanData?.amount.toLocaleString('en-IN')} (Rupees ${numberToWords(loanData?.amount || 0)} Only)`],
       ['Purpose of Loan:', loanData?.purpose || 'Personal'],
       ['Rate of Interest:', `${loanData?.rate}% per annum (Fixed)`],
       ['Loan Tenure:', `${loanData?.tenure} months (${Math.floor((loanData?.tenure || 0) / 12)} years ${(loanData?.tenure || 0) % 12} months)`],
-      ['EMI Amount:', `₹${loanData?.emi.toLocaleString('en-IN')} per month`],
-      ['Processing Fee:', `₹${Math.round((loanData?.amount || 0) * 0.02).toLocaleString('en-IN')} (2% of loan amount + GST)`],
+      ['EMI Amount:', `Rs. ${loanData?.emi.toLocaleString('en-IN')} per month`],
+      ['Processing Fee:', `Rs. ${Math.round((loanData?.amount || 0) * 0.02).toLocaleString('en-IN')} (2% of loan amount + GST)`],
     ];
     
     loanDetails.forEach(([label, value]) => {
@@ -454,14 +449,14 @@ export default function LoanAgentPage() {
     const totalAmount = (loanData?.emi || 0) * (loanData?.tenure || 0);
     doc.setFont('helvetica', 'bold');
     doc.text('Total Amount Payable:', margin + 5, yPos);
-    doc.text(`₹${totalAmount.toLocaleString('en-IN')}`, margin + 65, yPos);
+    doc.text(`Rs. ${totalAmount.toLocaleString('en-IN')}`, margin + 65, yPos);
 
     yPos += 15;
     doc.setFontSize(9);
     doc.setFont('helvetica', 'italic');
     const validityDate = new Date();
     validityDate.setDate(validityDate.getDate() + 30);
-    doc.text(`* This sanction is valid until ${validityDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`, margin, yPos);
+    doc.text(`Note: This sanction is valid until ${validityDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`, margin, yPos);
 
     // PAGE 2 - TERMS & CONDITIONS
     addNewPage();
@@ -481,7 +476,7 @@ export default function LoanAgentPage() {
       },
       {
         title: '2. Repayment',
-        content: `The loan shall be repayable in ${loanData?.tenure} Equated Monthly Installments (EMIs) of ₹${loanData?.emi.toLocaleString('en-IN')} each. The first EMI shall be due on the 5th day of the month following the date of disbursement. EMIs shall be recovered through Electronic Clearing Service (ECS) / NACH from your designated bank account.`
+        content: `The loan shall be repayable in ${loanData?.tenure} Equated Monthly Installments (EMIs) of Rs. ${loanData?.emi.toLocaleString('en-IN')} each. The first EMI shall be due on the 5th day of the month following the date of disbursement. EMIs shall be recovered through Electronic Clearing Service (ECS) / NACH from your designated bank account.`
       },
       {
         title: '3. Interest Calculation',
@@ -493,7 +488,7 @@ export default function LoanAgentPage() {
       },
       {
         title: '5. Penal Charges',
-        content: 'In case of default or delay in payment of EMI, penal interest @2% per month on the outstanding EMI amount shall be charged. Additionally, a bounce charge of ₹500 + GST shall be levied for each EMI dishonor.'
+        content: 'In case of default or delay in payment of EMI, penal interest @2% per month on the outstanding EMI amount shall be charged. Additionally, a bounce charge of Rs. 500 + GST shall be levied for each EMI dishonor.'
       },
       {
         title: '6. Documentation',
@@ -501,7 +496,7 @@ export default function LoanAgentPage() {
       },
       {
         title: '7. Insurance',
-        content: 'It is mandatory to obtain loan protection insurance as per the Company\'s policy. The insurance premium shall be borne by you and can be added to the loan amount or paid separately.'
+        content: 'It is mandatory to obtain loan protection insurance as per the Company policy. The insurance premium shall be borne by you and can be added to the loan amount or paid separately.'
       },
       {
         title: '8. Events of Default',
@@ -561,7 +556,6 @@ export default function LoanAgentPage() {
       yPos += contentLines.length * 5 + 5;
     });
 
-    // Acceptance Section
     yPos += 10;
     checkPageBreak(60);
     
@@ -671,9 +665,9 @@ export default function LoanAgentPage() {
             <div className="sticky top-0 z-20 h-[9.5vh] bg-gradient-to-r from-black via-neutral-900 to-black px-8 border-b border-neutral-800 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="text-sm font-medium bg-gradient-to-r from-amber-500 to-yellow-500 bg-clip-text text-transparent">
-                  {stage === 'sales' && '💼 Sales Agent'}
-                  {stage === 'kyc' && '🔐 KYC Verification'}
-                  {stage === 'underwriting' && '📊 Credit Analysis'}
+                  {stage === 'sales' && 'Sales Agent'}
+                  {stage === 'kyc' && 'KYC Verification'}
+                  {stage === 'underwriting' && 'Credit Analysis'}
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -826,18 +820,18 @@ export default function LoanAgentPage() {
                   <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
                     <IconCheck className="w-10 h-10 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Loan Approved!</h3>
-                  <p className="text-neutral-400">Congratulations {user?.firstName || kycName}</p>
+                  <h3 className="text-2xl font-bold text-white mb-2">Loan Approved</h3>
+                  <p className="text-neutral-400">Congratulations, {user?.firstName || kycName}</p>
                   {crmVerified && (
-                    <p className="text-xs text-green-400 mt-2">✓ CRM Verified Customer</p>
+                    <p className="text-xs text-green-400 mt-2">[CRM Verified Customer]</p>
                   )}
                 </div>
 
                 <div className="bg-neutral-800/50 rounded-xl p-6 mb-6 space-y-3 text-white">
-                  <div className="flex justify-between"><span className="text-neutral-400">Amount</span><span className="font-bold">₹{loanData.amount.toLocaleString()}</span></div>
+                  <div className="flex justify-between"><span className="text-neutral-400">Amount</span><span className="font-bold">Rs. {loanData.amount.toLocaleString()}</span></div>
                   <div className="flex justify-between"><span className="text-neutral-400">Tenure</span><span className="font-bold">{loanData.tenure} months</span></div>
                   <div className="flex justify-between"><span className="text-neutral-400">Rate</span><span className="font-bold">{loanData.rate}% p.a.</span></div>
-                  <div className="flex justify-between"><span className="text-neutral-400">EMI</span><span className="font-bold">₹{loanData.emi.toLocaleString()}</span></div>
+                  <div className="flex justify-between"><span className="text-neutral-400">EMI</span><span className="font-bold">Rs. {loanData.emi.toLocaleString()}</span></div>
                 </div>
 
                 <button 
