@@ -683,7 +683,21 @@ export default function LoanAgentPage() {
                 </button>
                 <div className="flex items-center gap-3 px-4 py-2 bg-neutral-900 rounded-lg border border-neutral-700" onClick={() => triggerRef.current?.querySelector('button')?.click()}>
                   <span className="text-white text-sm">{user?.username || user?.firstName}</span>
-                  <div ref={triggerRef}><UserButton afterSignOutUrl="/" /></div>
+                  <div ref={triggerRef} className="relative">
+                  <UserButton
+                    afterSignOutUrl="/"
+                    appearance={{
+                      elements: {
+                        userButtonPopoverCard: {
+                          transform: 'translateY(3.5vh)',
+                          '@media (max-width: 768px)': {
+                            transform: 'translateY(3.5vh) translateX(4vw)'
+                          }
+                        }
+                      }
+                    }}
+                  />
+                </div>
                 </div>
               </div>
             </div>
