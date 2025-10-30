@@ -92,7 +92,7 @@ const Logo = () => {
         animate={{ opacity: 1 }}
         className="text-[1.4vw] font-semibold tracking-tight text-white"
       >
-         Tata Capital
+         EY Capital
       </motion.span>
     </div>
   );
@@ -390,7 +390,7 @@ export default function AppPage() {
       onClick: () => router.push('/visualise'),
     },
     {
-      label: "Tata BFSI Dashboard",
+      label: "EY BFSI Dashboard",
       href: "/advice",
       icon: (
         <IconTable className="h-7 w-7 shrink-0 text-white" />
@@ -398,7 +398,7 @@ export default function AppPage() {
       onClick: () => router.push('/advice'),
     },
     {
-      label: "Tata Loans Expert",
+      label: "EY Loans Expert",
       href: "/chatbot",
       icon: (
         <IconMessageCircle className="h-7 w-7 shrink-0 text-white" />

@@ -171,7 +171,7 @@ export default function HomePage() {
             <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91c4.59-1.15 8-5.86 8-10.91V5l-8-3zM10.91 15.5l-3.41-3.41l1.41-1.41l2 2l4.59-4.59l1.41 1.41l-6 6z" />
           </svg>
           <h1 className="hidden md:inline-flex text-xl font-bold tracking-wider text-[#f5f5f5] ml-4">
-            Tata Capital
+            EY Capital
           </h1>
         </div>
         <nav className="hidden lg:flex items-center gap-8 text-sm">
@@ -211,7 +211,7 @@ export default function HomePage() {
                     Intelligent Lending. <br /> <span className="gold-text-glow">Instantly.</span>
                 </h1>
                 <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8">
-                    Get personalized loans from ₹50,000 to ₹25 Lakhs with instant approval. Powered by conversational AI technology from Tata Capital.
+                    Get personalized loans from ₹50,000 to ₹25 Lakhs with instant approval. Powered by conversational AI technology from EY Capital.
                 </p>
                 
                 {/* Trust Indicators */}
@@ -407,7 +407,7 @@ export default function HomePage() {
                             ))}
                         </div>
                         <p className="text-gray-300 mb-6 italic">
-                            "As a small business owner, I needed funds urgently. Tata Capital's AI system understood my needs perfectly and got me ₹10 lakhs with better rates than my bank offered."
+                            "As a small business owner, I needed funds urgently. EY Capital's AI system understood my needs perfectly and got me ₹10 lakhs with better rates than my bank offered."
                         </p>
                         <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#DAA520] to-[#C9A526] flex items-center justify-center text-white font-bold">
@@ -637,7 +637,7 @@ export default function HomePage() {
                             <svg className="w-5 h-5 text-[#DAA520]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
-                            <span>support@tatacapital.com</span>
+                            <span>support@EYcapital.com</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <svg className="w-5 h-5 text-[#DAA520]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -698,7 +698,7 @@ export default function HomePage() {
                 {/* Disclaimer */}
                 <div className="border-t border-gray-800 pt-8 text-xs text-gray-600 space-y-2">
                     <p>
-                        <strong>Disclaimer:</strong> This is a technology demonstration project exploring Agentic AI applications in financial services. Tata Capital is a trademark of Tata Sons Private Limited. This project is not affiliated with, endorsed by, or sponsored by Tata Capital Limited or any Tata Group company.
+                        <strong>Disclaimer:</strong> This is a technology demonstration project exploring Agentic AI applications in financial services. EY Capital is a trademark of EY Sons Private Limited. This project is not affiliated with, endorsed by, or sponsored by EY Capital Limited or any EY Group company.
                     </p>
                     <p>
                         *Interest rates, processing fees, and loan terms are subject to eligibility and credit approval. All loans are subject to RBI guidelines and company policies. Actual rates may vary based on individual credit profile, loan amount, and tenure.
@@ -710,7 +710,7 @@ export default function HomePage() {
 
                 {/* Copyright */}
                 <div className="border-t border-gray-800 mt-6 pt-6 text-center text-sm">
-                    <p>&copy; {new Date().getFullYear()} Tata Capital AI Lending Platform. All Rights Reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} EY Capital AI Lending Platform. All Rights Reserved.</p>
                     <p className="mt-2 text-xs">CIN: [Company Identification Number] | NBFC Registration: [Registration Number]</p>
                 </div>
             </div>

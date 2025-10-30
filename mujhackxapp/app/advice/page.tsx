@@ -61,7 +61,7 @@ const Logo = () => {
         animate={{ opacity: 1 }}
         className="text-[1.4vw] font-semibold tracking-tight text-white"
       >
-        Tata Capital
+        EY Capital
       </motion.span>
     </div>
   );
@@ -259,13 +259,13 @@ export default function AdvicePage() {
       onClick: () => router.push('/visualise'),
     },
     {
-      label: "Tata BFSI Dashboard",
+      label: "EY BFSI Dashboard",
       href: "/advice",
       icon: <IconTable className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/advice'),
     },
     {
-      label: "Tata Loans Expert",
+      label: "EY Loans Expert",
       href: "/chatbot",
       icon: <IconMessageCircle className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/chatbot'),
@@ -532,7 +532,7 @@ export default function AdvicePage() {
                   >
                     {/* Generate New Advice Button */}
                     <div className="mb-6 flex justify-between items-center flex-shrink-0">
-                      <h1 className="text-3xl ml-8 font-bold text-gray-100">Tata BFSI Dashboard</h1>
+                      <h1 className="text-3xl ml-8 font-bold text-gray-100">EY BFSI Dashboard</h1>
                       <button
                         onClick={generateAdvice}
                         className="px-6 py-2.5 bg-gray-900 hover:bg-gray-800 text-gray-200 rounded-lg font-medium transition-colors border border-gray-700"
@@ -556,7 +556,7 @@ export default function AdvicePage() {
                   >
                     {transactions.length > 0 ? (
                       <div className="text-center">
-                        <h1 className="text-3xl font-medium text-gray-100 mb-3">Tata BFSI Dashboard</h1>
+                        <h1 className="text-3xl font-medium text-gray-100 mb-3">EY BFSI Dashboard</h1>
                         <p className="text-gray-400 text-base mb-10 max-w-xl mx-auto">
                           Analyze your financial data and receive personalized insights
                         </p>

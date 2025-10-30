@@ -38,7 +38,7 @@ const Logo = () => {
         animate={{ opacity: 1 }}
         className="text-[1.4vw] font-semibold tracking-tight text-white"
       >
-        Tata Capital
+        EY Capital
       </motion.span>
     </div>
   );
@@ -121,7 +121,7 @@ Building an emergency fund from scratch can feel overwhelming, especially when l
 Automation makes emergency fund building virtually effortless. Set up an automatic transfer from your checking account to a dedicated savings account immediately after each paycheck arrives. Even if you can only afford $25 per week, you'll accumulate $1,300 over the course of a year.`,
           tags: ["Emergency Fund", "Savings", "Financial Security"],
           upvotes: 15,
-          author: "Tata Capital Team",
+          author: "EY Capital Team",
           createdAt: "2025-09-01"
         },
         {
@@ -141,7 +141,7 @@ The wants category encompasses everything that enhances your quality of life but
 Implementing the 50/30/20 rule requires accurate tracking of your current spending patterns. Start by reviewing several months of bank and credit card statements to understand where your money actually goes. Many people discover significant surprises during this exercise.`,
           tags: ["Budgeting", "Money Management", "Financial Planning"],
           upvotes: 12,
-          author: "Tata Capital Team",
+          author: "EY Capital Team",
           createdAt: "2025-09-02"
         },
         {
@@ -161,7 +161,7 @@ Risk and return represent two sides of the same investment coin. Generally speak
 Diversification reduces investment risk without necessarily reducing expected returns. Rather than putting all your money into a single stock or asset class, spreading investments across different companies, industries, and asset types helps protect against significant losses.`,
           tags: ["Investing", "Compound Interest", "Index Funds"],
           upvotes: 8,
-          author: "Tata Capital Team",
+          author: "EY Capital Team",
           createdAt: "2025-09-03"
         },
         {
@@ -181,7 +181,7 @@ Credit utilization, representing about 30% of your FICO score, measures how much
 Building credit from scratch requires patience and strategic planning. Young adults or immigrants without credit history might start with secured credit cards, which require cash deposits that serve as credit limits.`,
           tags: ["Credit Score", "Credit Report", "Financial Health"],
           upvotes: 6,
-          author: "Tata Capital Team",
+          author: "EY Capital Team",
           createdAt: "2025-09-04"
         }
       ];
@@ -503,7 +503,7 @@ export default function FinancialReadsPage() {
       onClick: () => router.push('/visualise'),
     },
     {
-      label: "Tata BFSI Dashboard",
+      label: "EY BFSI Dashboard",
       href: "/advice",
       icon: <IconTable className="h-7 w-7 shrink-0 text-white" />,
       onClick: () => router.push('/advice'),

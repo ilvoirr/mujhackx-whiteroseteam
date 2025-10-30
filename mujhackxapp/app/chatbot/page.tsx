@@ -76,7 +76,7 @@ const Logo = () => (
         <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91c4.59-1.15 8-5.86 8-10.91V5l-8-3zM10.91 15.5l-3.41-3.41l1.41-1.41l2 2l4.59-4.59l1.41 1.41l-6 6z" />
       </svg>
     </div>
-    <span className="text-[1.4vw] font-semibold text-white">Tata Capital</span>
+    <span className="text-[1.4vw] font-semibold text-white">EY Capital</span>
   </div>
 );
 
@@ -126,8 +126,8 @@ export default function LoanAgentPage() {
   const links = [
     { label: "Balance Sheet", href: "/apppage", icon: <IconReceipt className="h-7 w-7 text-white" />, onClick: () => router.push('/apppage') },
     { label: "Visualise Stats", href: "/visualise", icon: <IconChartBar className="h-7 w-7 text-white" />, onClick: () => router.push('/visualise') },
-    { label: "Tata BFSI Dashboard", href: "/advice", icon: <IconTable className="h-7 w-7 text-white" />, onClick: () => router.push('/advice') },
-    { label: "Tata Loans Expert", href: "/chatbot", icon: <IconMessageCircle className="h-7 w-7 text-white" />, onClick: () => router.push('/chatbot') },
+    { label: "EY BFSI Dashboard", href: "/advice", icon: <IconTable className="h-7 w-7 text-white" />, onClick: () => router.push('/advice') },
+    { label: "EY Loans Expert", href: "/chatbot", icon: <IconMessageCircle className="h-7 w-7 text-white" />, onClick: () => router.push('/chatbot') },
     { label: "Financial Reads", href: "/financial-reads", icon: <IconBook className="h-7 w-7 text-white" />, onClick: () => router.push('/financial-reads') },
     { label: "Stock Market", href: "/investment", icon: <IconTrendingUp className="h-7 w-7 text-white" />, onClick: () => router.push('/investment') },
   ];
@@ -146,7 +146,7 @@ export default function LoanAgentPage() {
     if (messages.length === 0) {
       setMessages([{
         id: Date.now(),
-        text: `Hello! I'm Raj from Tata Capital. ${user?.firstName ? `Nice to meet you, ${user.firstName}.` : 'Great to connect with you.'} How can I assist you with your financial goals today?`,
+        text: `Hello! I'm Raj from EY Capital. ${user?.firstName ? `Nice to meet you, ${user.firstName}.` : 'Great to connect with you.'} How can I assist you with your financial goals today?`,
         sender: 'agent',
         agent: 'Sales Agent'
       }]);
@@ -425,7 +425,7 @@ export default function LoanAgentPage() {
       } else if (basicValidation && !verifiedCustomer) {
         setMessages(prev => [...prev, {
           id: Date.now(),
-          text: "Step 3 of 3: Credit Analysis and Underwriting\n\nAs a new customer, your application requires additional verification by our senior underwriting team.\n\nOur team will contact you within 24-48 hours with the next steps.\n\nThank you for choosing Tata Capital.",
+          text: "Step 3 of 3: Credit Analysis and Underwriting\n\nAs a new customer, your application requires additional verification by our senior underwriting team.\n\nOur team will contact you within 24-48 hours with the next steps.\n\nThank you for choosing EY Capital.",
           sender: 'agent',
           agent: 'Underwriting Agent'
         }]);
@@ -467,12 +467,12 @@ export default function LoanAgentPage() {
     doc.rect(margin, yPos, 40, 15, 'F');
     doc.setFontSize(10);
     doc.setTextColor(255, 255, 255);
-    doc.text('TATA', margin + 20, yPos + 10, { align: 'center' });
+    doc.text('EY', margin + 20, yPos + 10, { align: 'center' });
     
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
-    doc.text('TATA CAPITAL LIMITED', pageWidth / 2, yPos + 10, { align: 'center' });
+    doc.text('EY CAPITAL LIMITED', pageWidth / 2, yPos + 10, { align: 'center' });
     
     yPos += 20;
     doc.setFontSize(9);
@@ -481,7 +481,7 @@ export default function LoanAgentPage() {
     yPos += 5;
     doc.text('Registered Office: 11th Floor, Tower A, Peninsula Business Park, Ganpatrao Kadam Marg,', pageWidth / 2, yPos, { align: 'center' });
     yPos += 5;
-    doc.text('Lower Parel, Mumbai - 400013 | Tel: 022-6141-8282 | www.tatacapital.com', pageWidth / 2, yPos, { align: 'center' });
+    doc.text('Lower Parel, Mumbai - 400013 | Tel: 022-6141-8282 | www.EYcapital.com', pageWidth / 2, yPos, { align: 'center' });
     
     yPos += 8;
     doc.setLineWidth(0.5);
@@ -523,7 +523,7 @@ export default function LoanAgentPage() {
     doc.text(`Dear ${loan.customerName.split(' ')[0]},`, margin, yPos);
     
     yPos += 10;
-    const openingText = `We are pleased to inform you that Tata Capital Limited ("the Company") has sanctioned a ${loan.purpose} in your favor, subject to the terms and conditions mentioned herein and as per your loan application dated ${new Date(loan.sanctionDate).toLocaleDateString('en-IN')}.`;
+    const openingText = `We are pleased to inform you that EY Capital Limited ("the Company") has sanctioned a ${loan.purpose} in your favor, subject to the terms and conditions mentioned herein and as per your loan application dated ${new Date(loan.sanctionDate).toLocaleDateString('en-IN')}.`;
     
     const splitOpening = doc.splitTextToSize(openingText, pageWidth - 2 * margin);
     doc.text(splitOpening, margin, yPos);
@@ -688,7 +688,7 @@ export default function LoanAgentPage() {
     yPos += 10;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
-    const acceptanceText = `I, ${loan.customerName}, hereby confirm that I have read, understood, and agree to abide by all the terms and conditions mentioned in this sanction letter. I request Tata Capital Limited to disburse the sanctioned loan amount to my registered bank account.`;
+    const acceptanceText = `I, ${loan.customerName}, hereby confirm that I have read, understood, and agree to abide by all the terms and conditions mentioned in this sanction letter. I request EY Capital Limited to disburse the sanctioned loan amount to my registered bank account.`;
     const acceptanceLines = doc.splitTextToSize(acceptanceText, pageWidth - 2 * margin);
     doc.text(acceptanceLines, margin, yPos);
     yPos += acceptanceLines.length * 5 + 15;
@@ -705,7 +705,7 @@ export default function LoanAgentPage() {
     
     yPos += 25;
     doc.setFont('helvetica', 'bold');
-    doc.text('For Tata Capital Limited', pageWidth - margin - 60, yPos);
+    doc.text('For EY Capital Limited', pageWidth - margin - 60, yPos);
     yPos += 7;
     doc.setFont('helvetica', 'normal');
     doc.text('Authorized Signatory', pageWidth - margin - 60, yPos);
@@ -713,11 +713,11 @@ export default function LoanAgentPage() {
     yPos = pageHeight - 30;
     doc.setFontSize(7);
     doc.setTextColor(100, 100, 100);
-    doc.text('This is a system-generated document and does not require a physical signature from Tata Capital Limited.', pageWidth / 2, yPos, { align: 'center' });
+    doc.text('This is a system-generated document and does not require a physical signature from EY Capital Limited.', pageWidth / 2, yPos, { align: 'center' });
     yPos += 5;
-    doc.text('For queries, contact our customer care at 1800-209-8282 or email support@tatacapital.com', pageWidth / 2, yPos, { align: 'center' });
+    doc.text('For queries, contact our customer care at 1800-209-8282 or email support@EYcapital.com', pageWidth / 2, yPos, { align: 'center' });
     yPos += 5;
-    doc.text('Tata Capital Limited is a Non-Banking Financial Company (NBFC) registered with RBI', pageWidth / 2, yPos, { align: 'center' });
+    doc.text('EY Capital Limited is a Non-Banking Financial Company (NBFC) registered with RBI', pageWidth / 2, yPos, { align: 'center' });
 
     const pageCount = doc.getNumberOfPages();
     doc.setFontSize(8);
@@ -727,7 +727,7 @@ export default function LoanAgentPage() {
       doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
     }
 
-    doc.save(`Tata_Capital_Sanction_Letter_${loan.customerName.replace(/\s/g, '_')}_${Date.now()}.pdf`);
+    doc.save(`EY_Capital_Sanction_Letter_${loan.customerName.replace(/\s/g, '_')}_${Date.now()}.pdf`);
   };
 
   const numberToWords = (num: number): string => {
