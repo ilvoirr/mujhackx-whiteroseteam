@@ -1,10 +1,8 @@
-# Tata Capital: AI-Powered Loan Sanctioning Prototype
+# Ernst Young: AI-Powered Loan Sanctioning Prototype
 
 An advanced multi-agent system simulating a seamless, end-to-end loan approval journey, from initial customer inquiry to automated sanction letter generation.
 
 <br/>
-
-[![Tata Capital Prototype Demo](https://img.youtube.com/vi/YOUR_YOUTUBE_VIDEO_ID/0.jpg)](https://youtu.be/pVhmJVCcjzY)
 
 ## Key Deliverables
 
