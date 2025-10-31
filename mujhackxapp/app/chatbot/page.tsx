@@ -133,7 +133,7 @@ export default function LoanAgentPage() {
   const isVoiceModeActiveRef = useRef(false)
   const audioRef = useRef<HTMLAudioElement>(null)
   const prevIsLoadingRef = useRef(loading)
-  const [lastTTSMessageId, setLastTTSMessageId] = useState<string | null>(null)
+  const [lastTTSMessageId, setLastTTSMessageId] = useState<number | null>(null)
 
   // Keep ref in sync with state for callbacks
   useEffect(() => {
@@ -227,7 +227,7 @@ export default function LoanAgentPage() {
         lastMsg.id !== lastTTSMessageId
       ) {
         playTTS(lastMsg.text)
-        setLastTTSMessageId(lastMsg.id as string | null) // Cast to match state
+        setLastTTSMessageId(lastMsg.id) // Cast to match state
       }
     }
   }, [loading, messages, lastTTSMessageId, playTTS, isVoiceModeActive])
