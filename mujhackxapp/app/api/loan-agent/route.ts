@@ -7,14 +7,20 @@ export async function POST(req: NextRequest) {
   try {
     const { message, conversationHistory, stage } = await req.json();
 
-    // Intent detection - check if customer is ready to proceed
+    // EVEN MORE FLEXIBLE INTENT: Trigger READY if user expresses intent to apply for any loan, or provides purpose
     const intentCompletion = await groq.chat.completions.create({
       messages: [
         { 
           role: 'system', 
-          content: `Analyze if the customer is ready to proceed with loan application. 
-Return ONLY ONE WORD: "READY" if they express intent to apply/proceed/continue with loan, or "CONTINUE" if they're still inquiring.
-Keywords indicating readiness: "yes", "proceed", "apply", "continue", "go ahead", "start", "okay", "sure", "let's do it", "I want to apply"`
+          content: `
+Analyze the customer's message.
+Criteria for "READY":
+- They say they want a personal loan, home loan, car loan, or any loan
+- OR, they mention purpose (e.g., "wedding", "education", "purchase")
+- OR, explicit keywords: "yes", "proceed", "apply", "continue", "go ahead", "start", "okay", "sure", "let's do it", "I want to apply"
+If so, reply ONLY ONE WORD: "READY".
+Otherwise reply ONLY ONE WORD: "CONTINUE".
+`
         },
         { role: 'user', content: message }
       ],
@@ -33,7 +39,6 @@ Keywords indicating readiness: "yes", "proceed", "apply", "continue", "go ahead"
         }))
       : [];
 
-    // Sales Agent Response
     const systemPrompt = stage === 'sales' 
       ? `You are Raj, a friendly and professional Tata Capital loan specialist. Your goal is to understand customer needs and guide them naturally.
 
