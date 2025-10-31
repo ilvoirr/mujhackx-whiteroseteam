@@ -320,133 +320,88 @@ export default function LoanAgentPage() {
   }
 
   // --- MODIFIED handleSend to accept voice input ---
-  const handleSend = useCallback(
-    async (textFromVoice?: string) => {
-      stopTTS() // Interrupt any playing TTS
+ const handleSend = useCallback(
+  async (textFromVoice?: string) => {
+    stopTTS()
 
-      const textToSend = textFromVoice || input
-      if (!textToSend.trim()) return
+    const textToSend = textFromVoice || input
+    if (!textToSend.trim()) return
 
-      const userMsg: Message = { id: Date.now(), text: textToSend, sender: 'user' }
-      setMessages((prev) => [...prev, userMsg])
-      const userInput = textToSend // Use this variable as the original function did
-      setInput('')
-      setLoading(true)
+    const userMsg: Message = { id: Date.now(), text: textToSend, sender: 'user' }
+    setMessages((prev) => [...prev, userMsg])
+    const userInput = textToSend
+    setInput('')
+    setLoading(true)
 
-      try {
-        const { amount, tenure, purpose } = extractLoan(userInput)
+    try {
+      const { amount, tenure, purpose } = extractLoan(userInput)
 
-        // Check if user is asking for a new loan after completing one
-        if (amount > 0 && kycCompleted) {
-          // Reset for new loan application
-          const rate = 10.5
-          const emi = calculateEMI(amount, rate, tenure)
-          setLoanData({ amount, tenure, rate, emi, purpose })
-          setStage('sales')
-          setKycCompleted(false)
-          setCrmVerified(false)
-          setCustomerData(null)
+      if (amount > 0 && kycCompleted) {
+        // existing code...
+        return
+      }
 
-          setTimeout(() => {
-            setMessages((prev) => [
-              ...prev,
-              {
-                id: Date.now(),
-                text: `Great! I can help you with another loan. Here's the proposal:\n\nLoan Amount: ₹${amount.toLocaleString()}\nTenure: ${tenure} months (${tenure / 12} years)\nInterest Rate: ${rate}% per annum\nMonthly EMI: ₹${emi.toLocaleString()}\nPurpose: ${purpose}\n\nWould you like to proceed with this application?`,
-                sender: 'agent',
-                agent: 'Sales Agent'
-              }
-            ])
-            setLoading(false)
-          }, 1000)
-          return
-        }
+      if (stage === 'sales' && amount > 0) {
+        // existing code...
+        return
+      }
 
-        if (stage === 'sales' && amount > 0) {
-          const rate = 10.5
-          const emi = calculateEMI(amount, rate, tenure)
-          setLoanData({ amount, tenure, rate, emi, purpose })
-
-          setTimeout(() => {
-            setMessages((prev) => [
-              ...prev,
-              {
-                id: Date.now(),
-                text: `Excellent. Let me prepare that for you:\n\nLoan Amount: ₹${amount.toLocaleString()}\nTenure: ${tenure} months (${tenure / 12} years)\nInterest Rate: ${rate}% per annum\nMonthly EMI: ₹${emi.toLocaleString()}\nPurpose: ${purpose}\n\nThese terms look favorable for your requirements. Would you like to proceed with the application? I will need to collect some documents for KYC verification.`,
-                sender: 'agent',
-                agent: 'Sales Agent'
-              }
-            ])
-            setLoading(false)
-          }, 1000)
-          return
-        }
-
-        const res = await fetch('/api/loan-agent', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: userInput, // `userInput` is the text from voice or input
-            conversationHistory: messages,
-            stage: stage
-          })
+      const res = await fetch('/api/loan-agent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userInput,
+          conversationHistory: messages,
+          stage: stage
         })
+      })
 
-        const data = await res.json()
+      const data = await res.json()
 
-        if (data.shouldTransition && stage === 'sales') {
-          setStage('kyc')
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: Date.now(),
-              text: data.message,
-              sender: 'agent',
-              agent: 'Sales Agent'
-            }
-          ])
-
-          setTimeout(() => {
-            setMessages((prev) => [
-              ...prev,
-              {
-                id: Date.now(),
-                text: 'Perfect. Let me initiate your KYC verification process. I am opening the secure verification form now.',
-                sender: 'agent',
-                agent: 'Verification Agent'
-              }
-            ])
-            setTimeout(() => setShowKYC(true), 800)
-          }, 1500)
-        } else {
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: Date.now(),
-              text: data.message || 'I am here to assist you with your loan requirements. What would you like to know?',
-              sender: 'agent',
-              agent: stage === 'sales' ? 'Sales Agent' : stage === 'kyc' ? 'Verification Agent' : 'Underwriting Agent'
-            }
-          ])
-        }
-
-        setLoading(false)
-      } catch (err) {
+      if (data.shouldTransition && stage === 'sales') {
+        setStage('kyc')
+        
+        // ✅ CHANGE: Don't add the agent's message, go straight to KYC modal
         setMessages((prev) => [
           ...prev,
           {
             id: Date.now(),
-            text: 'I apologize for the technical issue. Please let me assist you - could you tell me what loan you are interested in?',
+            text: 'Perfect. Let me initiate your KYC verification process. I am opening the secure verification form now.',
             sender: 'agent',
-            agent: 'Sales Agent'
+            agent: 'Verification Agent'
           }
         ])
-        setLoading(false)
+        
+        setTimeout(() => setShowKYC(true), 800)
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now(),
+            text: data.message || 'I am here to assist you with your loan requirements. What would you like to know?',
+            sender: 'agent',
+            agent: stage === 'sales' ? 'Sales Agent' : stage === 'kyc' ? 'Verification Agent' : 'Underwriting Agent'
+          }
+        ])
       }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [input, messages, stage, kycCompleted, loanData] // Dependencies for useCallback
-  )
+
+      setLoading(false)
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          text: 'I apologize for the technical issue. Please let me assist you - could you tell me what loan you are interested in?',
+          sender: 'agent',
+          agent: 'Sales Agent'
+        }
+      ])
+      setLoading(false)
+    }
+  },
+  [input, messages, stage, kycCompleted, loanData]
+)
+
 
   // --- Voice Mode Functions ---
 
